@@ -162,9 +162,9 @@ public class ProcessModel extends BroadcastReceiver {
         boolean needRequestData = RequestDataStategy.INSTANCE
                 .isNeedRetryQuestData(mApp);
         LogUtil.d(TAG, "requestData: needRequestData: " + needRequestData);
-        if (!needRequestData) {
-            return;
-        }
+//        if (!needRequestData) {
+//            return;
+//        }
         Map<String, String> map = new HashMap<String, String>();
         map.put("version", "2.0");
         String jsonString = HttpUtils.postData(getUrl(), map);

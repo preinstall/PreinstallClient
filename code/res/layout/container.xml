@@ -24,15 +24,30 @@
             layout="@+layout/no_network"
             android:visibility="gone" />
 
-        <com.smona.app.preinstallclient.view.ContentGrid
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:columnWidth="@dimen/item_size"
-            android:horizontalSpacing="@dimen/grid_h"
-            android:numColumns="@integer/columnCount"
-            android:verticalSpacing="@dimen/grid_v" />
+        <RelativeLayout
+            android:id="@+id/gridView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <com.smona.app.preinstallclient.view.ScrollLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ScrollLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#ffffff" >
+            </com.smona.app.preinstallclient.view.ScrollLayout>
+
+            <com.smona.app.preinstallclient.view.PageControlView
+                android:id="@+id/pageControl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dip"
+                android:layout_centerVertical="true"
+                android:background="#00000000"
+                android:gravity="center"
+                android:orientation="vertical" />
+        </RelativeLayout>
     </LinearLayout>
 
 </com.smona.app.preinstallclient.view.ContainerSpace>

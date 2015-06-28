@@ -23,7 +23,7 @@
     <dimen name="grid_margin_top">90dp</dimen>
     <dimen name="droptarget_marginTop">0dp</dimen>
     <dimen name="download_status_height">20dp</dimen>
-    <dimen name="download_status_width">20dp</dimen>
+    <dimen name="download_status_width">30dp</dimen>
     <dimen name="item_icon_size">64dp</dimen>
     <dimen name="item_size">72dp</dimen>
     <dimen name="hint_content_padding_left">20dp</dimen>

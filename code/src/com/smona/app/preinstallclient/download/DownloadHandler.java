@@ -13,11 +13,10 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.Downloads;
 
 public class DownloadHandler extends Handler {
     private static final String TAG = "DownloadHandler";
-    public static final Uri DOWNLOAD_URI = Downloads.Impl.CONTENT_URI;
+    public static final Uri DOWNLOAD_URI = Uri.parse("content://downloads/my_downloads");
 
     private IDownloadCallback mDownloadCallback;
     private DownloadManager mDownloadManager;
