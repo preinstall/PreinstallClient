@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dialog_vivision_height"
+        android:background="#888888" />
+
+    <TextView
+        android:id="@+id/hint_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/hint_content_padding_left"
+        android:layout_marginRight="@dimen/hint_content_padding_right"
+        android:paddingTop="@dimen/hint_content_padding_top"
+        android:text="@string/check_size_message"
+        android:textColor="#222222"
+        android:textSize="17sp" />
+
+    <LinearLayout
+        android:id="@+id/dont_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dont_hint_margin_left"
+        android:layout_marginTop="@dimen/dont_hint_margin_top"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            style="@style/hint_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false" />
+
+        <TextView
+            android:id="@+id/check_data_dont_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:text="@string/check_data_dont_hint"
+            android:textColor="#888888"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/hint_content_padding_left"
+        android:layout_marginRight="@dimen/hint_content_padding_right"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:padding="@dimen/dialog_action_padding" >
+
+        <Button
+            android:id="@+id/dialog_yes"
+            style="@style/dialog_hint"
+            android:background="@drawable/flux_hint_button"
+            android:layout_width="@dimen/flux_hint_button_width"
+            android:layout_height="@dimen/flux_hint_button_height"
+            android:layout_weight="1"
+            android:text="@string/check_data_yes"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/dialog_no"
+            style="@style/dialog_hint"
+            android:background="@drawable/flux_hint_button_green"
+            android:layout_width="@dimen/flux_hint_button_width"
+            android:layout_height="@dimen/flux_hint_button_height"
+            android:layout_marginLeft="@dimen/dialog_no_marginLeft"
+            android:layout_weight="1"
+            android:src="@drawable/flux_hint_button_green"
+            android:text="@string/check_data_no"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</LinearLayout>

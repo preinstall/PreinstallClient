@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.smona.app.preinstallclient.view.ContainerSpace xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/content_height"
+        android:layout_marginTop="@dimen/grid_margin_top"
+        android:background="@drawable/show_bg"
+        android:orientation="vertical" >
+
+        <include
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@+layout/header" />
+
+        <include
+            android:id="@+id/no_network"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            layout="@+layout/no_network"
+            android:visibility="gone" />
+
+        <com.smona.app.preinstallclient.view.ContentGrid
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:columnWidth="@dimen/item_size"
+            android:horizontalSpacing="@dimen/grid_h"
+            android:numColumns="@integer/columnCount"
+            android:verticalSpacing="@dimen/grid_v" />
+    </LinearLayout>
+
+</com.smona.app.preinstallclient.view.ContainerSpace>

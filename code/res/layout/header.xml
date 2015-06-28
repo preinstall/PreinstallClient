@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.smona.app.preinstallclient.view.HeaderView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/header_margin_left"
+    android:paddingRight="@dimen/header_margin_right"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/head_title_height" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textSize="16sp"
+            android:textColor="#FF6100"
+            android:layout_centerVertical="true"
+            android:text="@string/hot_title" />
+
+        <ImageView
+            android:id="@+id/download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/download" />
+        
+        <Button
+            android:id="@+id/download_count"
+            android:layout_width="@dimen/download_count_size"
+            android:layout_marginRight="@dimen/download_count_marginRight"
+            android:layout_marginTop="@dimen/download_count_marginTop"
+            android:layout_height="@dimen/download_count_size"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:visibility="invisible"
+            android:textSize="@dimen/download_count_textsize"
+            android:text="@string/download_count"
+            android:background="@drawable/download_count" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/header_underline"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_underline_height"
+            android:background="#888888"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/header_description"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/decription" />
+    </LinearLayout>
+
+</com.smona.app.preinstallclient.view.HeaderView>

@@ -1,0 +1,9 @@
+#apk Resolution
+GN_APK_RESOLUTION=ldpi,xhdpi,hdpi,mdpi,nodpi,xxhdpi
+
+GN_APK_LANGUAGE=zh_CN,en_US
+GN_APK_PLATFORM_VERSION=4.2
+GN_APK_MTK_PLATFORM=6589
+GN_APK_ADD_PROFILE=yes
+GN_APK_PUBLIC_JAR=yes
+

@@ -1,0 +1,50 @@
+<com.smona.app.preinstallclient.view.NoNetworkView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/no_network_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/no_network_wifi" />
+
+    <TextView
+        android:id="@+id/no_network_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/no_network_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/no_network_marginTop"
+        android:text="@string/no_network_content" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/no_network_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/no_network_marginTop"
+        android:orientation="horizontal"
+        android:padding="@dimen/dialog_action_padding" >
+
+        <Button
+            android:id="@+id/no_network_set"
+            style="@style/dialog_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/no_network_set"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/no_network_try"
+            style="@style/dialog_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dialog_no_marginLeft"
+            android:layout_weight="1"
+            android:text="@string/no_network_try"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</com.smona.app.preinstallclient.view.NoNetworkView>

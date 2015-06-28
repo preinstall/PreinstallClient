@@ -1,0 +1,41 @@
+<com.smona.app.preinstallclient.view.Element xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/element"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="@dimen/item_icon_size"
+        android:layout_height="@dimen/item_icon_size" >
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <com.smona.app.preinstallclient.view.ProgressView
+            android:id="@+id/download_progress"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/download_status_height"
+            android:background="@drawable/download_progress_mengban"
+            android:layout_gravity="center_horizontal|bottom" />
+
+        <TextView
+            android:id="@+id/download_status"
+            style="@style/item_main_text"
+            android:layout_width="@dimen/download_status_width"
+            android:layout_height="@dimen/download_status_height"
+            android:layout_gravity="center_horizontal|bottom"
+            android:textSize="@dimen/download_status_text_size"
+            android:background="@drawable/download_status_pedding"
+            android:text="@string/download_idle"
+            android:textColor="#000000" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/item" />
+
+</com.smona.app.preinstallclient.view.Element>

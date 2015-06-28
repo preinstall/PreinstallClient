@@ -1,0 +1,59 @@
+<resources>
+
+    <dimen name="source_bitmap_size">48dp</dimen>
+    <dimen name="content_width">250dp</dimen>
+    <dimen name="content_height">340dp</dimen>
+    <dimen name="space_padding_left">14dp</dimen>
+    <dimen name="space_padding_right">14dp</dimen>
+
+    <integer name="columnCount">3</integer>
+
+    <dimen name="header_underline_height">1dp</dimen>
+    <dimen name="droptarget_height">50dp</dimen>
+    <dimen name="drop_target_drag_padding">14dp</dimen>
+    <dimen name="drop_target_left_padding">5dp</dimen>
+    <dimen name="dragViewOffsetX">0dp</dimen>
+    <dimen name="dragViewOffsetY">0dp</dimen>
+    <dimen name="dragViewScale">12dp</dimen>
+    <dimen name="qsb_bar_height">40dp</dimen>
+    <dimen name="grid_v">5dp</dimen>
+    <dimen name="grid_h">10dp</dimen>
+    <dimen name="grid_margin_left">15dp</dimen>
+    <dimen name="grid_margin_right">15dp</dimen>
+    <dimen name="grid_margin_top">90dp</dimen>
+    <dimen name="droptarget_marginTop">0dp</dimen>
+    <dimen name="download_status_height">20dp</dimen>
+    <dimen name="download_status_width">20dp</dimen>
+    <dimen name="item_icon_size">64dp</dimen>
+    <dimen name="item_size">72dp</dimen>
+    <dimen name="hint_content_padding_left">20dp</dimen>
+    <dimen name="hint_content_padding_right">20dp</dimen>
+    <dimen name="hint_content_padding_top">10dp</dimen>
+    <dimen name="dont_hint_margin_left">20dp</dimen>
+    <dimen name="dont_hint_margin_top">5dp</dimen>
+    <dimen name="dialog_action_padding">10dp</dimen>
+    <dimen name="dialog_no_marginLeft">50dp</dimen>
+    <dimen name="dialog_vivision_height">2dp</dimen>
+    <dimen name="no_network_marginTop">20dp</dimen>
+    <dimen name="header_margin_right">10dp</dimen>
+    <dimen name="header_margin_left">25dp</dimen>
+    <dimen name="head_title_height">35dp</dimen>
+    <dimen name="flux_hint_button_height">42dp</dimen>
+    <dimen name="flux_hint_button_width">100dp</dimen>
+    <dimen name="download_count_size">12dp</dimen>
+    <dimen name="download_count_marginRight">0dp</dimen>
+    <dimen name="download_count_marginTop">0dp</dimen>
+    <dimen name="download_count_textsize">7sp</dimen>
+    <dimen name="actionbar_height">50dp</dimen>
+    <dimen name="download_back_width">50dp</dimen>
+    <dimen name="actionbar_text_size">16sp</dimen>
+    <dimen name="download_item_image_size">72dp</dimen>
+    <dimen name="download_manager_padding">10dp</dimen>
+    <dimen name="open_size">28dp</dimen>
+    <dimen name="download_status_text_size">10sp</dimen>
+    <dimen name="download_manager_status_height">5dp</dimen>
+    <dimen name="download_manager_item_marginBottom">10dp</dimen>
+    <dimen name="download_manager_desc_margin_right">10dp</dimen>
+    <dimen name="download_progress_margin">3dp</dimen>
+
+</resources>

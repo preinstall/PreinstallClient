@@ -1,0 +1,7 @@
+<resources>
+    <integer name="config_dropTargetBgTransitionDuration">0</integer>
+    <integer name="config_dropAnimMinDuration">100</integer>
+    <integer name="config_dropAnimMaxDuration">500</integer>
+    <integer name="config_dropAnimMaxDist">800</integer>
+	<bool name="config_useDropTargetDownTransition">true</bool>    
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/actionbar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/actionbar_bg" >
+
+    <View
+        android:id="@+id/actionbar_back"
+        android:layout_width="@dimen/download_back_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/actionbar_ic_ab_back" />
+
+    <TextView
+        style="@style/TextShadow"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/actionbar_back"
+        android:gravity="center"
+        android:text="@string/downloadManager"
+        android:textSize="@dimen/actionbar_text_size" />
+
+    <View
+        android:id="@+id/menu"
+        android:layout_width="@dimen/download_back_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/download_menu" />
+
+    <View
+        android:layout_width="@dimen/download_back_width"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/menu"
+        android:background="@drawable/download_search" />
+
+</RelativeLayout>

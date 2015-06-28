@@ -1,0 +1,21 @@
+<com.smona.app.preinstallclient.view.DragLayer xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/draglayer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false" >
+
+    <include
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@+layout/container" />
+
+    <include
+        android:id="@+id/droptarget"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/qsb_bar_height"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/droptarget_marginTop"
+        layout="@+layout/droptarget" />
+
+</com.smona.app.preinstallclient.view.DragLayer>
