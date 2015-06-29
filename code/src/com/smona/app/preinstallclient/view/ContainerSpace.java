@@ -97,6 +97,14 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 	private void initData() {
 
 		mDataSource = ProcessModel.createDataSource(getContext().getApplicationContext());
+		initScrollGridView();
+
+	}
+	
+	
+	private void initScrollGridView(){
+		mScrollLayout.removeAllViews();
+		mDataAdapterList.clear();
 		int pageNo = (int) Math.ceil(mDataSource.getCount(true) / APP_PAGE_SIZE);
 		for (int i = 0; i < pageNo; i++) {
 			GridView appPage = new GridView(mMain);
@@ -114,7 +122,6 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 			mScrollLayout.addView(appPage);
 		}
 		pageControl.bindScrollViewGroup(mScrollLayout);
-
 	}
 
 	public void refreshUI(HashMap<String, DownloadInfo> values) {
@@ -128,6 +135,7 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 
 	public void setDataSource(IDataSource dataSource) {
 		mDataSource.copy(dataSource);
+		initScrollGridView();
 	}
 
 	@Override
@@ -166,7 +174,9 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 
 	private void removeDragItem(DragObject d) {
 		DragInfo dragInfo = (DragInfo) d.dragInfo;
+		mDataSource.remove(mDataAdapterList.get(mScrollLayout.getCurScreen()).getItem(dragInfo.pos));
 		mDataAdapterList.get(mScrollLayout.getCurScreen()).remove(dragInfo.pos);
+		initScrollGridView();
 	}
 
 	@Override

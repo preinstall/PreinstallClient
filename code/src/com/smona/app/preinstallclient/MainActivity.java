@@ -48,6 +48,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 	private DownloadObsever mObserver;
 	private DownloadHandler mWorkHandler = null;
 	private HandlerThread mWorkThread = null;
+	private HashMap<String, DownloadInfo> downloadInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		if (downloadInfo != null && downloadInfo.size() != 0) {
+			ItemInfo tag = (ItemInfo) view.getTag();
+			if (tag != null) {
+				DownloadInfo info = downloadInfo.get(tag.appUrl);
+				if (info != null && info.status == DownloadProxy.STATUS_RUNNING) {
+					return false;
+				}
+			}
+		}
 		mContainer.startDrag(view, position);
 		return false;
 	}
@@ -133,7 +143,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 	@Override
 	public void bindItems(IDataSource dataSource) {
 		mContainer.setDataSource(dataSource);
-		//autoWifiDownload(dataSource);
+		// autoWifiDownload(dataSource);
 	}
 
 	private void onActionClickYes(View view) {
@@ -148,12 +158,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 		if (CommonUtil.checkWifiInfo(this)) {
 			int size = dataSource.getCount(true);
 			for (int i = 0; i < size; i++) {
-				ItemInfo ifo = (ItemInfo)dataSource.getInfo(i);
+				ItemInfo ifo = (ItemInfo) dataSource.getInfo(i);
 				DownloadProxy.getInstance().equeue(ifo);
 			}
 		}
 	}
-
 
 	@Override
 	protected void onResume() {
@@ -220,6 +229,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 
 	@Override
 	public void refreshUI(final HashMap<String, DownloadInfo> values) {
+		downloadInfo = values;
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

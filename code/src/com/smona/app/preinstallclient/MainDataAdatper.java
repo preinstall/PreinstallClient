@@ -30,9 +30,9 @@ public class MainDataAdatper extends AbstractDataAdapter {
 	@Override
 	public View createView(int position, View convertView, ViewGroup parent) {
 		ItemInfo info = (ItemInfo) mDataSource.getInfo(position);
-//		if (convertView == null) {
+		if (convertView == null) {
 			convertView = createElement();
-//		}
+		}
 
 		setConvertView(convertView, info);
 		return convertView;
