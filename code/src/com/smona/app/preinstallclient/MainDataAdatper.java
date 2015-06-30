@@ -8,6 +8,7 @@ import java.util.Map;
 import com.smona.app.preinstallclient.data.IDataSource;
 import com.smona.app.preinstallclient.data.ItemInfo;
 import com.smona.app.preinstallclient.download.DownloadInfo;
+import com.smona.app.preinstallclient.download.DownloadProxy;
 import com.smona.app.preinstallclient.util.LogUtil;
 import com.smona.app.preinstallclient.view.ContainerSpace;
 import com.smona.app.preinstallclient.view.Element;
@@ -71,6 +72,9 @@ public class MainDataAdatper extends AbstractDataAdapter {
 				}
 				((Element) view).onProgress(info.process);
 				((Element) view).onStatusChange(info.status);
+				if (info.status == DownloadProxy.STATUS_SUCCESSFUL){
+					
+				}
 			}
 		}
 	}

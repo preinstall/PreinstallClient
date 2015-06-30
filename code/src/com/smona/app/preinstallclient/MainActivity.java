@@ -20,6 +20,7 @@ import com.smona.app.preinstallclient.view.DropTargetBar;
 import com.smona.app.preinstallclient.view.PageControlView;
 import com.smona.app.preinstallclient.view.ScrollLayout;
 
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -49,6 +50,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 	private DownloadHandler mWorkHandler = null;
 	private HandlerThread mWorkThread = null;
 	private HashMap<String, DownloadInfo> downloadInfo;
+	private DownloadCompleteReceiver downloadCompleteReceiver = new DownloadCompleteReceiver();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +149,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 	}
 
 	private void onActionClickYes(View view) {
+		if (downloadInfo != null && downloadInfo.size() != 0) {
+			ItemInfo tag = (ItemInfo) view.getTag();
+			if (tag != null) {
+				DownloadInfo info = downloadInfo.get(tag.appUrl);
+				if (info != null && info.status == DownloadProxy.STATUS_SUCCESSFUL) {
+					return;
+				}
+			}
+		}
 		Object obj = view.getTag();
 		LogUtil.d(TAG, "view: " + view + ", obj: " + obj);
 		if (obj instanceof ItemInfo) {
@@ -168,6 +179,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 	protected void onResume() {
 		super.onResume();
 		actionNetwork();
+		registerReceiver(downloadCompleteReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));   
 	}
 
 	private void actionNetwork() {
@@ -185,6 +197,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener, O
 	@Override
 	protected void onPause() {
 		super.onPause();
+		unregisterReceiver(downloadCompleteReceiver);
 	}
 
 	@Override
