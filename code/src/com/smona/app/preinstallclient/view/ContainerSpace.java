@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
-
 import com.smona.app.preinstallclient.AbstractDataAdapter;
 import com.smona.app.preinstallclient.MainDataAdatper;
 import com.smona.app.preinstallclient.MainActivity;
@@ -17,8 +15,10 @@ import com.smona.app.preinstallclient.control.DragSource;
 import com.smona.app.preinstallclient.control.DropTarget;
 import com.smona.app.preinstallclient.data.DragInfo;
 import com.smona.app.preinstallclient.data.IDataSource;
+import com.smona.app.preinstallclient.data.ItemInfo;
 import com.smona.app.preinstallclient.data.db.MainDataSource;
 import com.smona.app.preinstallclient.download.DownloadInfo;
+import com.smona.app.preinstallclient.download.DownloadProxy;
 import com.smona.app.preinstallclient.util.ClientAnimUtils;
 import com.smona.app.preinstallclient.util.ClientViewPropertyAnimator;
 import com.smona.app.preinstallclient.util.LogUtil;
@@ -100,9 +100,8 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 		initScrollGridView();
 
 	}
-	
-	
-	private void initScrollGridView(){
+
+	private void initScrollGridView() {
 		mScrollLayout.removeAllViews();
 		mDataAdapterList.clear();
 		int pageNo = (int) Math.ceil(mDataSource.getCount(true) / APP_PAGE_SIZE);
@@ -126,6 +125,31 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 
 	public void refreshUI(HashMap<String, DownloadInfo> values) {
 		mDataAdapterList.get(mScrollLayout.getCurScreen()).refreshUI(values);
+		boolean haveSuccessful = false;
+		int size = mDataAdapterList.get(mScrollLayout.getCurScreen()).getCount();
+		ArrayList<View> views = mDataAdapterList.get(mScrollLayout.getCurScreen()).getmVisibleViews();
+		for (int i = views.size() - 1; i > 0; i--) {
+			View view = views.get(i);
+			ItemInfo tag = (ItemInfo) view.getTag();
+			if (tag != null) {
+				DownloadInfo info = values.get(tag.appUrl);
+				LogUtil.d("tag", "tag: " + tag + ",info: " + info);
+				if (info == null) {
+					continue;
+				}
+				if (i > size - 1) {
+					continue;
+				}
+				if (info.status == DownloadProxy.STATUS_SUCCESSFUL) {
+					haveSuccessful = true;
+					mDataSource.remove(mDataAdapterList.get(mScrollLayout.getCurScreen()).getItem(i));
+					mDataAdapterList.get(mScrollLayout.getCurScreen()).remove(i);
+				}
+			}
+		}
+		if (haveSuccessful) {
+			initScrollGridView();
+		}
 	}
 
 	public void setNetworkStatus(boolean hasNetwork) {
@@ -305,21 +329,21 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 		View image = element.findViewById(R.id.image);
 		Animator imageAnim = createImageAnimator(image);
 		mAnimateSet.play(imageAnim);
-		
+
 		View download_progress = element.findViewById(R.id.download_progress);
 		Animator download_progressAnim = createImageAnimator(download_progress);
 		mAnimateSet.play(download_progressAnim);
-		
+
 		View relayoutDownstatue = element.findViewById(R.id.relayoutDownstatue);
 		Animator download_statusAnim = createImageAnimator(relayoutDownstatue);
 		mAnimateSet.play(download_statusAnim);
-		
+
 		// add title animator
 		View title = element.findViewById(R.id.title);
 		Animator titleAnim = createTitleAnimator(title, new RemoveCallback() {
 			public void remove() {
 				removeDragItem(d);
-				
+
 			}
 		});
 		mAnimateSet.play(titleAnim);
@@ -357,5 +381,5 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 	interface RemoveCallback {
 		void remove();
 	}
-	
+
 }

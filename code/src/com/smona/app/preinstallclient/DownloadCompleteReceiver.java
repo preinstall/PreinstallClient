@@ -43,7 +43,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 					PackageUtils.install(context,localfileName);
 				}
 			}.start();
-
 		}
 	}
 }

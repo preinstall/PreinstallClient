@@ -78,4 +78,14 @@ public class MainDataAdatper extends AbstractDataAdapter {
 			}
 		}
 	}
+
+	public ArrayList<View> getmVisibleViews() {
+		return mVisibleViews;
+	}
+
+	public void setmVisibleViews(ArrayList<View> mVisibleViews) {
+		this.mVisibleViews = mVisibleViews;
+	}
+	
+	
 }
