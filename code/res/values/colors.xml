@@ -6,4 +6,6 @@
     <color name="title_bar_text_color">#ffffffff</color>
     <color name="delete_target_hover_tint">#DAFF0000</color>
 
+    <color name="alltransparent">#00000000</color>
+
 </resources>

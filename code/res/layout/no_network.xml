@@ -28,22 +28,24 @@
         android:padding="@dimen/dialog_action_padding" >
 
         <Button
-            android:id="@+id/no_network_set"
-            style="@style/dialog_hint"
-            android:layout_width="wrap_content"
+            android:id="@+id/no_network_try"
+            android:layout_width="120dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/no_network_set"
+            android:background="@drawable/green_bt_selector"
+            android:text="@string/no_network_try"
+            android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/no_network_try"
-            style="@style/dialog_hint"
-            android:layout_width="wrap_content"
+            android:id="@+id/no_network_set"
+            android:layout_width="120dip"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dialog_no_marginLeft"
+            android:layout_marginLeft="20dip"
             android:layout_weight="1"
-            android:text="@string/no_network_try"
+            android:background="@drawable/grey_bt_selector"
+            android:text="@string/no_network_set"
+            android:textColor="#000000"
             android:textSize="14sp" />
     </LinearLayout>
 

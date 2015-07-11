@@ -42,7 +42,7 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textColor">#000</item>
+        <item name="android:textColor">#808080</item>
     </style>
     
       <style name="item_main_text" parent="TextShadow">
@@ -73,5 +73,25 @@
     <style name="hint_checkbox" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/selected_hint</item>
     </style>
+    
+     <style name="CommonCheckBoxStyle" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/commoncheckboxstyle</item>
+    </style>
+    
+      <style name="commonDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowBackground">@color/alltransparent</item>
+        <!-- 无背景 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+    </style>
+     
 
 </resources>

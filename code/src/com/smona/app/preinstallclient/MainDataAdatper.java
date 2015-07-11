@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.smona.app.preinstallclient.data.IDataSource;
 import com.smona.app.preinstallclient.data.ItemInfo;
+import com.smona.app.preinstallclient.data.db.ClientSettings;
 import com.smona.app.preinstallclient.download.DownloadInfo;
 import com.smona.app.preinstallclient.download.DownloadProxy;
 import com.smona.app.preinstallclient.util.LogUtil;
@@ -14,7 +15,10 @@ import com.smona.app.preinstallclient.view.ContainerSpace;
 import com.smona.app.preinstallclient.view.Element;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
@@ -23,9 +27,11 @@ import android.view.ViewGroup;
 public class MainDataAdatper extends AbstractDataAdapter {
 
 	private ArrayList<View> mVisibleViews = new ArrayList<View>();
+	private Context context;
 
 	public MainDataAdatper(Context context, IDataSource datasource) {
 		super(context, datasource);
+		this.context = context;
 	}
 
 	@Override
@@ -60,20 +66,26 @@ public class MainDataAdatper extends AbstractDataAdapter {
 		if (values.size() == 0) {
 			return;
 		}
-		LogUtil.d("values", "values: " + values);
+		//LogUtil.d("Element", "values: " + values);
 		ItemInfo tag;
 		for (View view : mVisibleViews) {
 			tag = (ItemInfo) view.getTag();
 			if (tag != null) {
 				DownloadInfo info = values.get(tag.appUrl);
-				LogUtil.d("tag", "tag: " + tag + ",info: " + info);
+				//LogUtil.d("tag", "tag: " + tag + ",info: " + info);
 				if (info == null) {
 					continue;
 				}
+				//LogUtil.d("Test", "refreshUI getProgressTotal:  " + info.total+ "onProgress progress:  " + info.process);
 				((Element) view).onProgress(info.process);
 				((Element) view).onStatusChange(info.status);
-				if (info.status == DownloadProxy.STATUS_SUCCESSFUL){
-					
+				ContentValues contentValues = new ContentValues();
+				contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS, info.status);
+				ProcessModel.updateDB(context, tag.packageName, contentValues);
+				if (info.status == DownloadProxy.STATUS_SUCCESSFUL) {
+					contentValues = new ContentValues();
+					contentValues.put(ClientSettings.ItemColumns.DOWNLOADFILEPATH, info.downloadPath);
+					ProcessModel.updateDB(context, tag.packageName, contentValues);
 				}
 			}
 		}
@@ -86,6 +98,5 @@ public class MainDataAdatper extends AbstractDataAdapter {
 	public void setmVisibleViews(ArrayList<View> mVisibleViews) {
 		this.mVisibleViews = mVisibleViews;
 	}
-	
-	
+
 }

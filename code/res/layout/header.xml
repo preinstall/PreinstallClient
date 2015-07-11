@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:textSize="16sp"
-            android:textColor="#FF6100"
+            android:textColor="#FF5400"
             android:layout_centerVertical="true"
             android:text="@string/hot_title" />
 
@@ -59,6 +59,7 @@
             android:id="@+id/header_description"
             android:layout_width="wrap_content"
             android:layout_marginTop="5dp"
+            android:textColor="#aaaaaa"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:text="@string/decription" />

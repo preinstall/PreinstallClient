@@ -13,6 +13,6 @@ public class Constant {
 
     // url
     public static final String APPINFO_URL = "http://ac.gionee.com/index/apps";
-    public static final String APPINFO_URL_TEST = "http://ac.3gtest.gionee.com/index/apps";
+    public static final String APPINFO_URL_TEST = "http://ac.3gtest.gionee.com/index/apps?ptype=dd&version=-1";
 
 }

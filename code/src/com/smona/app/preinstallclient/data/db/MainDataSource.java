@@ -32,7 +32,7 @@ public class MainDataSource extends AbstractDataSource {
 		ContentResolver resolver = context.getContentResolver();
 		Cursor c = null;
 		try {
-			c = resolver.query(ClientSettings.ItemColumns.CONTENT_URI, null, null, null, null);
+			c = resolver.query(ClientSettings.ItemColumns.CONTENT_URI, null, null, null, ClientSettings.ItemColumns.INDEX + " ASC ");
 			boolean canRead = c != null;
 			if (canRead) {
 				int appidIndex = c.getColumnIndex(ClientSettings.ItemColumns.APPID);
@@ -44,6 +44,9 @@ public class MainDataSource extends AbstractDataSource {
 				int appPackageIndex = c.getColumnIndex(ClientSettings.ItemColumns.PACKAGENAME);
 				int appSdkVersionIndex = c.getColumnIndex(ClientSettings.ItemColumns.SDKVERSION);
 				int downloadStatusIndex = c.getColumnIndex(ClientSettings.ItemColumns.DOWNLOADSTATUS);
+				int indexIndex = c.getColumnIndex(ClientSettings.ItemColumns.INDEX);
+				int downloadPathPathsIndex = c.getColumnIndex(ClientSettings.ItemColumns.DOWNLOADFILEPATH);
+				int isNewIndex = c.getColumnIndex(ClientSettings.ItemColumns.ISNEW);
 
 				while (c.moveToNext()) {
 					ItemInfo info = new ItemInfo();
@@ -56,9 +59,10 @@ public class MainDataSource extends AbstractDataSource {
 					info.packageName = c.getString(appPackageIndex);
 					info.sdkVersion = c.getString(appSdkVersionIndex);
 					info.downloadStatus = c.getInt(downloadStatusIndex);
-					for (int j = 0; j < 10; j++) {
-						values.add(info);
-					}
+					info.appindex = c.getInt(indexIndex);
+					info.downloadFilePath = c.getString(downloadPathPathsIndex);
+					info.isnew = c.getInt(isNewIndex);
+					values.add(info);
 				}
 			}
 

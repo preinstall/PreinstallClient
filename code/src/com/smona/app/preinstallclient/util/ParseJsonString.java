@@ -56,6 +56,7 @@ public class ParseJsonString {
 				info.appIconUrl = js.getString(APPICON_URL);
 				info.className = js.getString(APP_CLASS);
 				info.sdkVersion = js.getString(SDK_VERDION);
+				info.downloadStatus = ItemInfo.STATUS_INIT;
 				values.add(info);
 			}
 		} catch (Exception e) {

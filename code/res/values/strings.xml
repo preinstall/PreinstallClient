@@ -5,20 +5,20 @@
     <string name="decription">我们为您准备了以下应用,希望您喜欢.</string>
     <string name="hot_title">热门应用</string>
     <string name="delete_target_label">"删除"</string>
-    
     <string name="download_idle">""</string>
-    <string name="download_pause">"暂停"</string>
-    <string name="download_install">"安装中"</string>
-    <string name="download_continue">"继续"</string>
+    <string name="download_pause">"暂停中"</string>
+    <string name="download_install">"待安装"</string>
+    <string name="download_downloading">"下载中"</string>
     <string name="download_failed">"下载失败"</string>
     <string name="download_installed">"已安装"</string>
-    
     <string name="check_data_dont_hint">不再提示</string>
     <string name="check_data_title">系统提示</string>
     <string name="check_data_message">&#160;&#160;&#160;&#160;&#160;&#160;在下载过程中可能产生数据流量,具体资费请咨询运营商.是否继续建立连接？</string>
     <string name="check_data_checkbox">不再提示</string>
     <string name="check_data_yes">"确定"</string>
     <string name="check_data_no">"取消"</string>
+    <string name="check_download_no">"退出"</string>
+    <string name="check_download_title">温馨提示</string>
     <string name="check_download_message">&#160;&#160;&#160;&#160;&#160;欢迎您使用更多应用,产品的使用完全免费,使用的过程会产生流量费,流量费请咨询当地运营商,是否允许建立连接?</string>
     <string name="check_size_message">&#160;&#160;&#160;&#160;&#160;您好,该应用大小超过15M,检测到您当前正在使用&#160;2G/3G&#160;网络下载,为了节省您的流量,&#160;建议您使用&#160;Wifi&#160;下载,是否现在打开Wifi?</string>
     <string name="check_delete_message">&#160;&#160;&#160;&#160;&#160;您是否要删除该任务?</string>
@@ -26,10 +26,7 @@
     <string name="no_network_set">"设置"</string>
     <string name="no_network_content">"您的网络出现问题,去看看什么原因吧!"</string>
     <string name="download_count">""</string>
-    
     <string name="failed_create_cache_dir">"创建缓存目录失败"</string>
-
-    
     <string name="downloadManager">"下载管理"</string>
     <string name="downloading">"正在下载"</string>
     <string name="downloaded">"已下载"</string>
@@ -37,4 +34,7 @@
     <string name="donwload_status_des_running">下载中</string>
     <string name="donwload_status_des_pause">已暂停</string>
     <string name="donwload_status_des_pause_network_error">已暂停(网络已断开)</string>
+    <string name="continue_download">"继续下载"</string>
+    <string name="turn_on_wifi">"打开wifi"</string>
+
 </resources>

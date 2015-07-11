@@ -109,6 +109,7 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 			GridView appPage = new GridView(mMain);
 			appPage.setOnItemClickListener(mMain);
 			appPage.setOnItemLongClickListener(mMain);
+			appPage.setVerticalSpacing(30);
 			// get the "i" page data
 			int start = (int) (i * ContainerSpace.APP_PAGE_SIZE);
 			int end = (int) (start + ContainerSpace.APP_PAGE_SIZE);
@@ -125,31 +126,6 @@ public class ContainerSpace extends FrameLayout implements DragSource, DropTarge
 
 	public void refreshUI(HashMap<String, DownloadInfo> values) {
 		mDataAdapterList.get(mScrollLayout.getCurScreen()).refreshUI(values);
-		boolean haveSuccessful = false;
-		int size = mDataAdapterList.get(mScrollLayout.getCurScreen()).getCount();
-		ArrayList<View> views = mDataAdapterList.get(mScrollLayout.getCurScreen()).getmVisibleViews();
-		for (int i = views.size() - 1; i > 0; i--) {
-			View view = views.get(i);
-			ItemInfo tag = (ItemInfo) view.getTag();
-			if (tag != null) {
-				DownloadInfo info = values.get(tag.appUrl);
-				LogUtil.d("tag", "tag: " + tag + ",info: " + info);
-				if (info == null) {
-					continue;
-				}
-				if (i > size - 1) {
-					continue;
-				}
-				if (info.status == DownloadProxy.STATUS_SUCCESSFUL) {
-					haveSuccessful = true;
-					mDataSource.remove(mDataAdapterList.get(mScrollLayout.getCurScreen()).getItem(i));
-					mDataAdapterList.get(mScrollLayout.getCurScreen()).remove(i);
-				}
-			}
-		}
-		if (haveSuccessful) {
-			initScrollGridView();
-		}
 	}
 
 	public void setNetworkStatus(boolean hasNetwork) {

@@ -1,7 +1,7 @@
 <com.smona.app.preinstallclient.view.Element xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/element"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="@dimen/item_icon_size"
+    android:layout_height="@dimen/item_icon_size"
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
@@ -11,9 +11,9 @@
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:scaleType="fitXY"/>
 
         <com.smona.app.preinstallclient.view.ProgressView
             android:id="@+id/download_progress"
@@ -21,26 +21,37 @@
             android:layout_height="@dimen/download_status_height"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_horizontal|bottom"
-            android:background="@drawable/download_progress_mengban" />
+            android:background="@drawable/download_normal" />
 
         <RelativeLayout
             android:id="@+id/relayoutDownstatue"
-            android:layout_width="wrap_content"
+            android:layout_width="16dip"
             android:layout_height="@dimen/download_status_height"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/download_status_pedding" >
-
-            <TextView
-                android:id="@+id/download_status"
-                style="@style/item_main_text"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/download_status_height"
-                android:layout_centerInParent="true"
-                android:text="@string/download_idle"
-                android:textColor="#000000"
-                android:textSize="@dimen/download_status_text_size" />
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/download_status"
+            style="@style/item_main_text"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/download_status_height"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:text="@string/download_idle"
+            android:textColor="#000000"
+            android:textSize="@dimen/download_status_text_size" />
+
+        <ImageView
+            android:id="@+id/new_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:background="@drawable/new_app" />
     </RelativeLayout>
 
     <TextView

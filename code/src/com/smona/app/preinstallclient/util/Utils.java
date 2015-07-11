@@ -277,7 +277,7 @@ public class Utils {
     }
 
     public static String getSystemProp(String key, String defVal) {
-        return "test";// SystemProperties.get(key, defVal);
+        return "dd";// SystemProperties.get(key, defVal);
     }
 
     public static String getFileMd5(File file) {
