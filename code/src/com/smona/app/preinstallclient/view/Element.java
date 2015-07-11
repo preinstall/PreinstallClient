@@ -83,6 +83,9 @@ public class Element extends LinearLayout implements OnDownListener {
 		} else {
 			relayoutDownstatue.setVisibility(View.VISIBLE);
 		}
+		if (status == ItemInfo.STATUS_SUCCESSFUL){
+			mProgress.updateProgress(mProgress.getProgressTotal());
+		}
 	}
 
 	public void initUI(ItemInfo info) {

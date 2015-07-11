@@ -47,8 +47,7 @@ public class MainDataSource extends AbstractDataSource {
 				int indexIndex = c.getColumnIndex(ClientSettings.ItemColumns.INDEX);
 				int downloadPathPathsIndex = c.getColumnIndex(ClientSettings.ItemColumns.DOWNLOADFILEPATH);
 				int isNewIndex = c.getColumnIndex(ClientSettings.ItemColumns.ISNEW);
-
-				while (c.moveToNext()) {
+				for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 					ItemInfo info = new ItemInfo();
 					info.appid = c.getString(appidIndex);
 					info.className = c.getString(appClassIndex);
