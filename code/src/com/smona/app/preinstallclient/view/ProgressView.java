@@ -31,8 +31,8 @@ public class ProgressView extends View {
         }
     }
 
-    public void setProgressTotal(float total) {
-        mProgressTotal = (int) (total * 1024 * 1024);
+    public void setProgressTotal(int total) {
+        mProgressTotal = total;
     }
 
     public long getProgressTotal() {

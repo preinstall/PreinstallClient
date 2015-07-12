@@ -54,7 +54,10 @@ public class ImageCacheStrategy {
         File file = new File(mCacheRootPath + CACHE_DIR + fileName
                 + IMAGE_SUBBFIX);
         if (file.exists()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inPreferredConfig = Bitmap.Config.RGB_565;
+            opts.inSampleSize = 2;
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(), opts);
             return bitmap;
         }
         return null;

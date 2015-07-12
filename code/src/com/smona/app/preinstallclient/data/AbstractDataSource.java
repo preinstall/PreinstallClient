@@ -13,6 +13,10 @@ public abstract class AbstractDataSource implements IDataSource {
 
     protected List<ItemInfo> mDatas;
 
+    public List<ItemInfo> getMdatas() {
+        return mDatas;
+    }
+
     public AbstractDataSource(Context context) {
         mContext = context;
         mDatas = new ArrayList<ItemInfo>();

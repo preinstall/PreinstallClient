@@ -78,7 +78,7 @@ public class MainDataAdatper extends AbstractDataAdapter {
                 }
                 // LogUtil.d("Test", "refreshUI getProgressTotal:  " +
                 // info.total+ "onProgress progress:  " + info.process);
-                ((Element) view).onProgress(info.process);
+                ((Element) view).onProgress(info.total, info.process);
                 ((Element) view).onStatusChange(info.status);
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,

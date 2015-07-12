@@ -129,6 +129,9 @@ public class ContainerSpace extends FrameLayout implements DragSource,
     }
 
     public void refreshUI(HashMap<String, DownloadInfo> values) {
+        if (mDataAdapterList.size() <= mScrollLayout.getCurScreen()) {
+            return;
+        }
         mDataAdapterList.get(mScrollLayout.getCurScreen()).refreshUI(values);
     }
 

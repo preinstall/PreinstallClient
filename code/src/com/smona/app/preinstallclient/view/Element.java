@@ -61,7 +61,8 @@ public class Element extends LinearLayout implements OnDownListener {
     }
 
     @Override
-    public void onProgress(int progress) {
+    public void onProgress(int progressTotal, int progress) {
+        mProgress.setProgressTotal(progressTotal);
         mProgress.updateProgress(progress);
         if (progress == 0) {
             relayoutDownstatue.setVisibility(View.VISIBLE);
@@ -88,7 +89,8 @@ public class Element extends LinearLayout implements OnDownListener {
             relayoutDownstatue.setVisibility(View.VISIBLE);
         }
         if (status == ItemInfo.STATUS_SUCCESSFUL) {
-            mProgress.updateProgress(mProgress.getProgressTotal());
+            mProgress.setProgressTotal(1);
+            mProgress.updateProgress(1);
         }
     }
 
@@ -99,7 +101,6 @@ public class Element extends LinearLayout implements OnDownListener {
         Bitmap bg = iconCache.cacheBitmap(info.packageName);
         mImage.setImageDrawable(new BitmapDrawable(context.getResources(), bg));
         mTitle.setText(info.appName);
-        mProgress.setProgressTotal(info.appSize);
         if (ItemInfo.NEW_FLAG == info.isnew) {
             new_flag.setVisibility(View.VISIBLE);
         } else {

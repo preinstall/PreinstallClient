@@ -34,7 +34,7 @@ public class ItemInfo {
     }
 
     public interface OnDownListener {
-        public void onProgress(int progress);
+        public void onProgress(int progressTotal, int progress);
 
         void onStatusChange(int status);
     }
