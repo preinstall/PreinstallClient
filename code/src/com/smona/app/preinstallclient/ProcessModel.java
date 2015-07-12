@@ -14,7 +14,6 @@ import com.smona.app.preinstallclient.control.DeferredHandler;
 import com.smona.app.preinstallclient.control.IconCache;
 import com.smona.app.preinstallclient.control.ImageCacheStrategy;
 import com.smona.app.preinstallclient.control.RequestDataStategy;
-import com.smona.app.preinstallclient.image.BitmapProcess;
 import com.smona.app.preinstallclient.util.Constant;
 import com.smona.app.preinstallclient.util.HttpUtils;
 import com.smona.app.preinstallclient.util.LogUtil;
@@ -127,6 +126,10 @@ public class ProcessModel extends BroadcastReceiver {
             LogUtil.d(TAG, "bindData start: ");
             if (noRecyleCallback()) {
                 final IDataSource dataSource = createDataSource(mApp);
+                List<ItemInfo> mDatas = dataSource.getMdatas();
+                if (mDatas != null) {
+                    requestIcons(mApp, mIconCache, mDatas);
+                }
                 Runnable r = new Runnable() {
                     public void run() {
                         mCallbacks.get().bindItems(dataSource);
@@ -160,7 +163,7 @@ public class ProcessModel extends BroadcastReceiver {
         return dataSource;
     }
 
-    private void requestHttpDatas() {
+    public void requestHttpDatas() {
         boolean needRequestData = RequestDataStategy.INSTANCE
                 .isNeedRetryQuestData(mApp);
         LogUtil.d(TAG, "requestData: needRequestData: " + needRequestData);
@@ -185,7 +188,8 @@ public class ProcessModel extends BroadcastReceiver {
         }
     }
 
-    public static void saveToDB(ClientApplication mApp, List<ItemInfo> datas) {
+    public static synchronized void saveToDB(ClientApplication mApp,
+            List<ItemInfo> datas) {
         ContentResolver contentResolver = mApp.getContentResolver();
         LogUtil.d(TAG, "datas: " + datas.size());
         Cursor c;
@@ -312,10 +316,10 @@ public class ProcessModel extends BroadcastReceiver {
 
     public static int deleteDB(Context context, String packageName) {
         ContentResolver resolver = context.getContentResolver();
-        String where = ClientSettings.ItemColumns.PACKAGENAME + "='?'";
-        int result = resolver.delete(
-                ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION, where,
-                new String[] { packageName });
+        String where = ClientSettings.ItemColumns.PACKAGENAME + "='"
+                + packageName + "'";
+        int result = resolver.delete(ClientSettings.ItemColumns.CONTENT_URI,
+                where, null);
         return result;
     }
 
