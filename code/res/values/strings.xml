@@ -7,7 +7,7 @@
     <string name="delete_target_label">"删除"</string>
     <string name="download_idle">""</string>
     <string name="download_pause">"暂停中"</string>
-    <string name="download_install">"待安装"</string>
+    <string name="download_install">"安装中"</string>
     <string name="download_downloading">"下载中"</string>
     <string name="download_failed">"下载失败"</string>
     <string name="download_installed">"已安装"</string>
