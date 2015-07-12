@@ -20,8 +20,8 @@ public class BitmapProcess {
         int sourceSize = context.getResources().getDimensionPixelSize(
                 R.dimen.source_bitmap_size);
         Bitmap source = ImageCacheStrategy.getInstance().getBitmap(fileName);
-        if (source == null){
-        	return;
+        if (source == null) {
+            return;
         }
         Bitmap standerd = resizeBitmap(source, sourceSize, sourceSize);
         Drawable template = context.getResources().getDrawable(resid);
@@ -52,9 +52,9 @@ public class BitmapProcess {
 
     private static Bitmap resizeBitmap(Bitmap srcBitmap, int newHeight,
             int newWidth) {
-    	if(srcBitmap == null){
-    		return null;
-    	}
+        if (srcBitmap == null) {
+            return null;
+        }
         int srcWidth = srcBitmap.getWidth();
         int srcHeight = srcBitmap.getHeight();
         float scaleWidth = ((float) newWidth) / srcWidth;

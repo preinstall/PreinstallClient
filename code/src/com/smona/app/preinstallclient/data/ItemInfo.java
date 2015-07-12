@@ -3,14 +3,14 @@ package com.smona.app.preinstallclient.data;
 import com.smona.app.preinstallclient.download.DownloadProxy;
 
 public class ItemInfo {
-	public static final int NEW_FLAG = 1;
-	public static final int UNNEW_FLAG = 0;
-	public static int STATUS_INIT = DownloadProxy.STATUS_PENDING;
-	public static int STATUS_RUNNING = DownloadProxy.STATUS_RUNNING;
-	public static int STATUS_PAUSED = DownloadProxy.STATUS_PAUSED;
-	public static int STATUS_FAILED = DownloadProxy.STATUS_FAILED;
-	public static int STATUS_SUCCESSFUL = DownloadProxy.STATUS_SUCCESSFUL;
-	
+    public static final int NEW_FLAG = 1;
+    public static final int UNNEW_FLAG = 0;
+    public static int STATUS_INIT = DownloadProxy.STATUS_PENDING;
+    public static int STATUS_RUNNING = DownloadProxy.STATUS_RUNNING;
+    public static int STATUS_PAUSED = DownloadProxy.STATUS_PAUSED;
+    public static int STATUS_FAILED = DownloadProxy.STATUS_FAILED;
+    public static int STATUS_SUCCESSFUL = DownloadProxy.STATUS_SUCCESSFUL;
+
     public String appid;
     public String appName;
     public String appUrl;
@@ -34,7 +34,7 @@ public class ItemInfo {
     }
 
     public interface OnDownListener {
-    	public void onProgress(int progress) ;
+        public void onProgress(int progress);
 
         void onStatusChange(int status);
     }

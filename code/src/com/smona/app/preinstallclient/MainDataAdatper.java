@@ -26,77 +26,82 @@ import android.view.ViewGroup;
 @SuppressLint({ "InflateParams", "ViewHolder" })
 public class MainDataAdatper extends AbstractDataAdapter {
 
-	private ArrayList<View> mVisibleViews = new ArrayList<View>();
-	private Context context;
+    private ArrayList<View> mVisibleViews = new ArrayList<View>();
+    private Context context;
 
-	public MainDataAdatper(Context context, IDataSource datasource) {
-		super(context, datasource);
-		this.context = context;
-	}
+    public MainDataAdatper(Context context, IDataSource datasource) {
+        super(context, datasource);
+        this.context = context;
+    }
 
-	@Override
-	public View createView(int position, View convertView, ViewGroup parent) {
-		ItemInfo info = (ItemInfo) mDataSource.getInfo(position);
-		if (convertView == null) {
-			convertView = createElement();
-		}
+    @Override
+    public View createView(int position, View convertView, ViewGroup parent) {
+        ItemInfo info = (ItemInfo) mDataSource.getInfo(position);
+        if (convertView == null) {
+            convertView = createElement();
+        }
 
-		setConvertView(convertView, info);
-		return convertView;
-	}
+        setConvertView(convertView, info);
+        return convertView;
+    }
 
-	@SuppressLint("NewApi")
-	private View createElement() {
-		View convertView = mLayoutInflater.inflate(R.layout.item_main, null);
-		mVisibleViews.add(convertView);
-		return convertView;
-	}
+    @SuppressLint("NewApi")
+    private View createElement() {
+        View convertView = mLayoutInflater.inflate(R.layout.item_main, null);
+        mVisibleViews.add(convertView);
+        return convertView;
+    }
 
-	private void setConvertView(View convertView, ItemInfo info) {
-		((Element) convertView).initUI(info);
-	}
+    private void setConvertView(View convertView, ItemInfo info) {
+        ((Element) convertView).initUI(info);
+    }
 
-	public int getNeedCount() {
-		return mDataSource.getCount(false);
-	}
+    public int getNeedCount() {
+        return mDataSource.getCount(false);
+    }
 
-	public void refreshUI(HashMap<String, DownloadInfo> values) {
-		super.refreshUI(values);
+    public void refreshUI(HashMap<String, DownloadInfo> values) {
+        super.refreshUI(values);
 
-		if (values.size() == 0) {
-			return;
-		}
-		//LogUtil.d("Element", "values: " + values);
-		ItemInfo tag;
-		for (View view : mVisibleViews) {
-			tag = (ItemInfo) view.getTag();
-			if (tag != null) {
-				DownloadInfo info = values.get(tag.appUrl);
-				//LogUtil.d("tag", "tag: " + tag + ",info: " + info);
-				if (info == null) {
-					continue;
-				}
-				//LogUtil.d("Test", "refreshUI getProgressTotal:  " + info.total+ "onProgress progress:  " + info.process);
-				((Element) view).onProgress(info.process);
-				((Element) view).onStatusChange(info.status);
-				ContentValues contentValues = new ContentValues();
-				contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS, info.status);
-				ProcessModel.updateDB(context, tag.packageName, contentValues);
-				if (info.status == DownloadProxy.STATUS_SUCCESSFUL) {
-					contentValues = new ContentValues();
-					contentValues.put(ClientSettings.ItemColumns.DOWNLOADFILEPATH, info.downloadPath);
-					ProcessModel.updateDB(context, tag.packageName, contentValues);
-				}
-			}
-		}
-	}
+        if (values.size() == 0) {
+            return;
+        }
+        // LogUtil.d("Element", "values: " + values);
+        ItemInfo tag;
+        for (View view : mVisibleViews) {
+            tag = (ItemInfo) view.getTag();
+            if (tag != null) {
+                DownloadInfo info = values.get(tag.appUrl);
+                // LogUtil.d("tag", "tag: " + tag + ",info: " + info);
+                if (info == null) {
+                    continue;
+                }
+                // LogUtil.d("Test", "refreshUI getProgressTotal:  " +
+                // info.total+ "onProgress progress:  " + info.process);
+                ((Element) view).onProgress(info.process);
+                ((Element) view).onStatusChange(info.status);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
+                        info.status);
+                ProcessModel.updateDB(context, tag.packageName, contentValues);
+                if (info.status == DownloadProxy.STATUS_SUCCESSFUL) {
+                    contentValues = new ContentValues();
+                    contentValues.put(
+                            ClientSettings.ItemColumns.DOWNLOADFILEPATH,
+                            info.downloadPath);
+                    ProcessModel.updateDB(context, tag.packageName,
+                            contentValues);
+                }
+            }
+        }
+    }
 
-	public ArrayList<View> getmVisibleViews() {
-		return mVisibleViews;
-	}
+    public ArrayList<View> getmVisibleViews() {
+        return mVisibleViews;
+    }
 
-	public void setmVisibleViews(ArrayList<View> mVisibleViews) {
-		this.mVisibleViews = mVisibleViews;
-	}
+    public void setmVisibleViews(ArrayList<View> mVisibleViews) {
+        this.mVisibleViews = mVisibleViews;
+    }
 
 }

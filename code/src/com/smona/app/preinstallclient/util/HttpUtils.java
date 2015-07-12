@@ -60,7 +60,7 @@ public class HttpUtils {
         HttpURLConnection conn = null;
         InputStream is = null;
         OutputStream op = null;
-       // byte[] data = getRequestData(params, "UTF-8").getBytes();
+        // byte[] data = getRequestData(params, "UTF-8").getBytes();
         try {
             URL url = new URL(actionUrl);
             conn = (HttpURLConnection) url.openConnection();
@@ -74,11 +74,11 @@ public class HttpUtils {
             conn.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded");
 
-//            conn.setRequestProperty("Content-Length",
-//                    String.valueOf(data.length));
+            // conn.setRequestProperty("Content-Length",
+            // String.valueOf(data.length));
 
             op = conn.getOutputStream();
-            //op.write(data);
+            // op.write(data);
 
             int response = conn.getResponseCode();
             if (response == HttpURLConnection.HTTP_OK) {

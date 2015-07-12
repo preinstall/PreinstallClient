@@ -36,5 +36,6 @@
     <string name="donwload_status_des_pause_network_error">已暂停(网络已断开)</string>
     <string name="continue_download">"继续下载"</string>
     <string name="turn_on_wifi">"打开wifi"</string>
+    <string name="download_completed">"下载完成"</string>
 
 </resources>

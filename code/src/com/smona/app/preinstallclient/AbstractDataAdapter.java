@@ -68,8 +68,8 @@ public abstract class AbstractDataAdapter extends BaseAdapter {
     public ItemInfo getItemInfo(int position) {
         return (ItemInfo) mDataSource.getInfo(position);
     }
-    
+
     public void refreshUI(HashMap<String, DownloadInfo> values) {
-        
+
     }
 }

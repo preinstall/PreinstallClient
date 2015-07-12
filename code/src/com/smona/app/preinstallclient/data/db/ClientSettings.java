@@ -48,8 +48,9 @@ public class ClientSettings {
         public static final String SQL_CREATE_TABLE = "CREATE TABLE "
                 + TABLE_NAME + " ( " + APPID + TEXT + PACKAGENAME + PRIMARY_KEY
                 + APPCLASS + TEXT + APPNAME + TEXT + APPURL + TEXT + APPSIZE
-                + FLOAT + APPICONURL + TEXT + SDKVERSION + TEXT + DOWNLOADFILEPATH + TEXT + ISNEW + INTEGER +" , " + INDEX + INTEGER +" , "+ DOWNLOADSTATUS + INTEGER 
-                + ")";
+                + FLOAT + APPICONURL + TEXT + SDKVERSION + TEXT
+                + DOWNLOADFILEPATH + TEXT + ISNEW + INTEGER + " , " + INDEX
+                + INTEGER + " , " + DOWNLOADSTATUS + INTEGER + ")";
     }
 
 }

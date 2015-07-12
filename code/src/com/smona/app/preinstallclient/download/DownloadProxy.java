@@ -13,7 +13,7 @@ public class DownloadProxy {
     private DownloadManager mDownloadMgr;
     private volatile static DownloadProxy sInstance = null;
     private static Context sAppContext;
-    
+
     public static final int STATUS_PENDING = DownloadManager.STATUS_PENDING;
     public static final int STATUS_FAILED = DownloadManager.STATUS_FAILED;
     public static final int STATUS_PAUSED = DownloadManager.STATUS_PAUSED;

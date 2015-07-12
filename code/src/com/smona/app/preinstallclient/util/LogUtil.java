@@ -6,7 +6,7 @@ import android.util.Log;
 
 public final class LogUtil {
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     private static final String MODULE_NAME = "PreInstallClient";
     private static final LogUtil INSTANCE = new LogUtil();

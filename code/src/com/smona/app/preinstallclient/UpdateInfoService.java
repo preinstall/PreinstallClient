@@ -37,80 +37,79 @@ import android.os.Message;
 import android.util.Log;
 
 public class UpdateInfoService extends Service {
-	private static final String TAG = "UpdateInfoService";
-	private static final int UPDATAWEATHER = 0X10;
-	private ClientApplication mApp;
-	private final int GOTOBROADCAST = 0X20;
+    private static final String TAG = "UpdateInfoService";
+    private static final int UPDATAWEATHER = 0X10;
+    private ClientApplication mApp;
+    private final int GOTOBROADCAST = 0X20;
 
-	public static final String BROADCASTACTION = "com.jone.broad";
+    public static final String BROADCASTACTION = "com.jone.broad";
 
-	Timer timer;
-	private IconCache mIconCache;
+    Timer timer;
+    private IconCache mIconCache;
 
-	@Override
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public IBinder onBind(Intent arg0) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public void onCreate() {
-		mApp = (ClientApplication) getApplication();
-		mIconCache = mApp.getIconCache();
-		timer = new Timer();
-		timer.schedule(new TimerTask() {
+    public void onCreate() {
+        mApp = (ClientApplication) getApplication();
+        mIconCache = mApp.getIconCache();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
 
-			@Override
-			public void run() {
-				// ¶¨Ê±¸üÐÂ
-				loadData();
+            @Override
+            public void run() {
+                // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+                loadData();
 
-			}
-		}, 0, RequestDataStategy.WAIT_TIME);
-	}
+            }
+        }, 0, RequestDataStategy.WAIT_TIME);
+    }
 
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
 
+        return super.onStartCommand(intent, flags, startId);
+    }
 
+    private void loadData() {
+        requestHttpDatas();
+    }
 
-		return super.onStartCommand(intent, flags, startId);
-	}
+    private void requestHttpDatas() {
+        boolean needRequestData = RequestDataStategy.INSTANCE
+                .isNeedRetryQuestData(mApp);
+        LogUtil.d(TAG, "requestData: needRequestData: " + needRequestData);
+        if (!needRequestData) {
+            return;
+        }
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("version", "2.0");
+        String jsonString = HttpUtils.postData(ProcessModel.getUrl(), map);
+        boolean success = HttpUtils.isRequestDataSuccess(jsonString);
+        LogUtil.d(TAG, "requestData: success: " + success + ", jsonString: "
+                + jsonString);
+        if (success) {
+            List<ItemInfo> datas = ParseJsonString.parseJsonToItems(jsonString);
+            ProcessModel.filterDulicateMemory(mApp, datas);
+            ProcessModel.requestIcons(mApp, mIconCache, datas);
+            ProcessModel.filterDulicateDB(mApp, datas);
+            ProcessModel.saveToDB(mApp, datas);
+            RequestDataStategy.INSTANCE.saveLastRequestDataTime(mApp);
+        } else {
 
-	private void loadData() {
-		requestHttpDatas();
-	}
+        }
+    }
 
-	private void requestHttpDatas() {
-		boolean needRequestData = RequestDataStategy.INSTANCE.isNeedRetryQuestData(mApp);
-		LogUtil.d(TAG, "requestData: needRequestData: " + needRequestData);
-		if (!needRequestData) {
-			return;
-		}
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("version", "2.0");
-		String jsonString = HttpUtils.postData(ProcessModel.getUrl(), map);
-		boolean success = HttpUtils.isRequestDataSuccess(jsonString);
-		LogUtil.d(TAG, "requestData: success: " + success + ", jsonString: " + jsonString);
-		if (success) {
-			List<ItemInfo> datas = ParseJsonString.parseJsonToItems(jsonString);
-			ProcessModel.filterDulicateMemory(mApp,datas);
-			ProcessModel.requestIcons(mApp, mIconCache,datas);
-			ProcessModel.filterDulicateDB(mApp,datas);
-			ProcessModel.saveToDB(mApp,datas);
-			RequestDataStategy.INSTANCE.saveLastRequestDataTime(mApp);
-		} else {
-
-		}
-	}
-
-
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		if (timer != null) {
-			timer.cancel();
-		}
-	}
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
 
 }

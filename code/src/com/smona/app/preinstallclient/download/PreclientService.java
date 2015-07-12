@@ -17,7 +17,7 @@ public class PreclientService extends Service implements IDownloadCallback {
     @Override
     public void onCreate() {
         super.onCreate();
-      
+
     }
 
     @Override
@@ -32,7 +32,7 @@ public class PreclientService extends Service implements IDownloadCallback {
 
     @Override
     public void refreshUI(HashMap<String, DownloadInfo> values) {
-        
+
     }
 
 }

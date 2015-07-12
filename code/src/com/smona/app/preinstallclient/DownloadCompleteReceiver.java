@@ -11,38 +11,41 @@ import android.widget.Toast;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
 
-	public void onReceive(final Context context, Intent intent) {
-		if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+    public void onReceive(final Context context, Intent intent) {
+        if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
 
-			Toast.makeText(context, "ÏÂÔØÍê³É£¡", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.download_completed,
+                    Toast.LENGTH_LONG).show();
 
-			String fileName = "";
+            String fileName = "";
 
-			/**
-			 * The download manager is a system service that handles
-			 * long-running HTTP downloads.
-			 */
-			DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);// ´ÓÏÂÔØ·þÎñ»ñÈ¡ÏÂÔØ¹ÜÀíÆ÷
+            /**
+             * The download manager is a system service that handles
+             * long-running HTTP downloads.
+             */
+            DownloadManager downloadManager = (DownloadManager) context
+                    .getSystemService(Context.DOWNLOAD_SERVICE);// ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½
 
-			DownloadManager.Query query = new DownloadManager.Query();
+            DownloadManager.Query query = new DownloadManager.Query();
 
-			query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);// ÉèÖÃ¹ýÂË×´Ì¬£º³É¹¦
+            query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);// ï¿½ï¿½ï¿½Ã¹ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½É¹ï¿½
 
-			Cursor c = downloadManager.query(query);// ²éÑ¯ÒÔÇ°ÏÂÔØ¹ýµÄ¡®³É¹¦ÎÄ¼þ¡¯
+            Cursor c = downloadManager.query(query);// ï¿½ï¿½Ñ¯ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ø¹ï¿½Ä¡ï¿½ï¿½É¹ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
 
-			if (c.moveToFirst()) {// ÒÆ¶¯µ½×îÐÂÏÂÔØµÄÎÄ¼þ
-				fileName = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-			}
-			c.close();
-			System.out.println("======ÎÄ¼þÃû³Æ=====" + fileName);
+            if (c.moveToFirst()) {// ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½Ä¼ï¿½
+                fileName = c.getString(c
+                        .getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+            }
+            c.close();
+            System.out.println("======ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½=====" + fileName);
 
-			final String localfileName = fileName;// ¹ýÂËÂ·¾¶
+            final String localfileName = fileName;// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
 
-			new Thread(){
-				public void run(){
-					PackageUtils.install(context,localfileName);
-				}
-			}.start();
-		}
-	}
+            new Thread() {
+                public void run() {
+                    PackageUtils.install(context, localfileName);
+                }
+            }.start();
+        }
+    }
 }
