@@ -20,14 +20,6 @@
             android:textColor="#FF5400"
             android:layout_centerVertical="true"
             android:text="@string/hot_title" />
-
-        <ImageView
-            android:id="@+id/download"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/download" />
         
         <Button
             android:id="@+id/download_count"
@@ -54,15 +46,6 @@
             android:layout_height="@dimen/header_underline_height"
             android:background="#888888"
             android:gravity="center_vertical" />
-
-        <TextView
-            android:id="@+id/header_description"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textColor="#aaaaaa"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:text="@string/decription" />
     </LinearLayout>
 
 </com.smona.app.preinstallclient.view.HeaderView>
