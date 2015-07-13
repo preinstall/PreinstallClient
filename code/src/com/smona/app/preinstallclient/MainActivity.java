@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         registerNetwork();
         initData();
         initDownload();
-        showFirstConfirmDialog();
+        //showFirstConfirmDialog();
 
         Intent intent = new Intent(getApplicationContext(),
                 UpdateInfoService.class);
