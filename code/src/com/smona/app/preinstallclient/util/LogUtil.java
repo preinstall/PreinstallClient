@@ -8,7 +8,7 @@ public final class LogUtil {
 
     public static final boolean DEBUG = true;
 
-    private static final String MODULE_NAME = "PreInstallClient";
+    private static final String MODULE_NAME = "Preinstall";
     private static final LogUtil INSTANCE = new LogUtil();
 
     /**

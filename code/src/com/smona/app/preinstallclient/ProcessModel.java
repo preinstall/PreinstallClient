@@ -11,8 +11,6 @@ import com.smona.app.preinstallclient.data.cache.CacheDataSource;
 import com.smona.app.preinstallclient.data.db.ClientSettings;
 import com.smona.app.preinstallclient.data.db.MainDataSource;
 import com.smona.app.preinstallclient.control.DeferredHandler;
-import com.smona.app.preinstallclient.control.IconCache;
-import com.smona.app.preinstallclient.control.ImageCacheStrategy;
 import com.smona.app.preinstallclient.control.RequestDataStategy;
 import com.smona.app.preinstallclient.util.Constant;
 import com.smona.app.preinstallclient.util.HttpUtils;
@@ -38,7 +36,6 @@ public class ProcessModel extends BroadcastReceiver {
     public static final boolean DEBUG_DATA = false;
     public static final boolean TEST_EVN_DEBUG = false;
     private ClientApplication mApp;
-    private IconCache mIconCache;
     private DeferredHandler mHandler = new DeferredHandler();
     private static final HandlerThread WORKER_THREAD = new HandlerThread(
             "loader");
@@ -52,9 +49,8 @@ public class ProcessModel extends BroadcastReceiver {
     private WeakReference<Callbacks> mCallbacks;
     private final Object mLock = new Object();
 
-    ProcessModel(ClientApplication app, IconCache iconCache) {
+    ProcessModel(ClientApplication app) {
         mApp = app;
-        mIconCache = iconCache;
     }
 
     public void initialize(Callbacks callbacks) {
@@ -126,10 +122,6 @@ public class ProcessModel extends BroadcastReceiver {
             LogUtil.d(TAG, "bindData start: ");
             if (noRecyleCallback()) {
                 final IDataSource dataSource = createDataSource(mApp);
-                List<ItemInfo> mDatas = dataSource.getMdatas();
-                if (mDatas != null) {
-                    requestIcons(mApp, mIconCache, mDatas);
-                }
                 Runnable r = new Runnable() {
                     public void run() {
                         mCallbacks.get().bindItems(dataSource);
@@ -179,7 +171,6 @@ public class ProcessModel extends BroadcastReceiver {
         if (success) {
             List<ItemInfo> datas = ParseJsonString.parseJsonToItems(jsonString);
             filterDulicateMemory(mApp, datas);
-            requestIcons(mApp, mIconCache, datas);
             filterDulicateDB(mApp, datas);
             saveToDB(mApp, datas);
             RequestDataStategy.INSTANCE.saveLastRequestDataTime(mApp);
@@ -199,36 +190,13 @@ public class ProcessModel extends BroadcastReceiver {
                     null, ClientSettings.ItemColumns.PACKAGENAME + " = '"
                             + info.packageName + "'", null, null);
             if (c == null || c.getCount() == 0) {
-                info.appindex = RequestDataStategy.getLastDataIndex(mApp);
+                info.appindex = RequestDataStategy.INSTANCE.getLastDataIndex(mApp);
                 insertDB(contentResolver, info);
             } else {
                 updatetDB(contentResolver, info);
                 c.close();
             }
         }
-    }
-
-    public static void requestIcons(ClientApplication mApp,
-            IconCache mIconCache, List<ItemInfo> datas) {
-        int size = datas.size();
-        ItemInfo info = null;
-        for (int i = 0; i < size; i++) {
-            info = datas.get(i);
-            requestIcon(mApp, mIconCache, info);
-        }
-    }
-
-    public static void requestIcon(ClientApplication mApp,
-            IconCache mIconCache, final ItemInfo info) {
-        ImageCacheStrategy.ReturnImageType type = ImageCacheStrategy
-                .getInstance().downloadImage(info.packageName, info.appIconUrl);
-        LogUtil.d(TAG, "requestIcon type=" + type + ", info.appIconUrl: "
-                + info.appIconUrl);
-        // if (ImageCacheStrategy.ReturnImageType.DOWNLOAD == type) {
-        // BitmapProcess.processBitmap(mApp, R.drawable.template,
-        // info.packageName);
-        // }
-        mIconCache.cacheBitmap(info.packageName);
     }
 
     public static void filterDulicateMemory(ClientApplication mApp,
@@ -301,6 +269,7 @@ public class ProcessModel extends BroadcastReceiver {
         int result = contentResolver.update(
                 ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION, values,
                 where, null);
+        LogUtil.d(TAG, "updatetDB: " + result);
     }
 
     public static int updateDB(Context context, String packageName,

@@ -1,40 +1,20 @@
 package com.smona.app.preinstallclient;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.smona.app.preinstallclient.control.IconCache;
-import com.smona.app.preinstallclient.control.ImageCacheStrategy;
 import com.smona.app.preinstallclient.control.RequestDataStategy;
-import com.smona.app.preinstallclient.data.IDataSource;
 import com.smona.app.preinstallclient.data.ItemInfo;
-import com.smona.app.preinstallclient.data.db.ClientSettings;
-import com.smona.app.preinstallclient.data.db.MainDataSource;
-import com.smona.app.preinstallclient.image.BitmapProcess;
-import com.smona.app.preinstallclient.util.Constant;
 import com.smona.app.preinstallclient.util.HttpUtils;
 import com.smona.app.preinstallclient.util.LogUtil;
 import com.smona.app.preinstallclient.util.ParseJsonString;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.util.Log;
 
 public class UpdateInfoService extends Service {
     private static final String TAG = "UpdateInfoService";
@@ -45,23 +25,19 @@ public class UpdateInfoService extends Service {
     public static final String BROADCASTACTION = "com.jone.broad";
 
     Timer timer;
-    private IconCache mIconCache;
 
     @Override
     public IBinder onBind(Intent arg0) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public void onCreate() {
         mApp = (ClientApplication) getApplication();
-        mIconCache = mApp.getIconCache();
         timer = new Timer();
         timer.schedule(new TimerTask() {
 
             @Override
             public void run() {
-                // ��ʱ����
                 loadData();
 
             }
@@ -94,7 +70,6 @@ public class UpdateInfoService extends Service {
         if (success) {
             List<ItemInfo> datas = ParseJsonString.parseJsonToItems(jsonString);
             ProcessModel.filterDulicateMemory(mApp, datas);
-            ProcessModel.requestIcons(mApp, mIconCache, datas);
             ProcessModel.filterDulicateDB(mApp, datas);
             ProcessModel.saveToDB(mApp, datas);
             RequestDataStategy.INSTANCE.saveLastRequestDataTime(mApp);

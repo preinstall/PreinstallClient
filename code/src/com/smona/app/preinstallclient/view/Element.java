@@ -2,9 +2,8 @@ package com.smona.app.preinstallclient.view;
 
 import java.util.HashMap;
 
-import com.smona.app.preinstallclient.ClientApplication;
 import com.smona.app.preinstallclient.R;
-import com.smona.app.preinstallclient.control.IconCache;
+import com.smona.app.preinstallclient.control.ImageLoaderManager;
 import com.smona.app.preinstallclient.data.ItemInfo;
 import com.smona.app.preinstallclient.data.ItemInfo.OnDownListener;
 import com.smona.app.preinstallclient.download.DownloadProxy;
@@ -12,8 +11,6 @@ import com.smona.app.preinstallclient.util.LogUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -95,11 +92,7 @@ public class Element extends LinearLayout implements OnDownListener {
     }
 
     public void initUI(ItemInfo info) {
-        Context context = getContext();
-        IconCache iconCache = ((ClientApplication) context
-                .getApplicationContext()).getIconCache();
-        Bitmap bg = iconCache.cacheBitmap(info.packageName);
-        mImage.setImageDrawable(new BitmapDrawable(context.getResources(), bg));
+        ImageLoaderManager.getInstance().loadImage(info.appIconUrl, mImage);
         mTitle.setText(info.appName);
         if (ItemInfo.NEW_FLAG == info.isnew) {
             new_flag.setVisibility(View.VISIBLE);

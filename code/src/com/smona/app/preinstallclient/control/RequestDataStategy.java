@@ -3,7 +3,6 @@ package com.smona.app.preinstallclient.control;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.SystemClock;
 
 public enum RequestDataStategy {
     INSTANCE;
@@ -20,7 +19,7 @@ public enum RequestDataStategy {
         return currentTime == -1 || diff >= WAIT_TIME;
     }
 
-    public static void saveLastRequestDataTime(Context context) {
+    public void saveLastRequestDataTime(Context context) {
         SharedPreferences sp = context.getSharedPreferences(RequestDataStategy,
                 Context.MODE_PRIVATE);
         Editor et = sp.edit();
@@ -28,13 +27,13 @@ public enum RequestDataStategy {
         et.commit();
     }
 
-    private static long getLastRequestDataTime(Context context) {
+    private long getLastRequestDataTime(Context context) {
         SharedPreferences sp = context.getSharedPreferences(RequestDataStategy,
                 Context.MODE_PRIVATE);
         return sp.getLong(LAST_TIME_FLAG, -1);
     }
 
-    public static void saveLastDataIndex(Context context, int index) {
+    public void saveLastDataIndex(Context context, int index) {
         SharedPreferences sp = context.getSharedPreferences(RequestDataStategy,
                 Context.MODE_PRIVATE);
         Editor et = sp.edit();
@@ -42,7 +41,7 @@ public enum RequestDataStategy {
         et.commit();
     }
 
-    public static int getLastDataIndex(Context context) {
+    public int getLastDataIndex(Context context) {
         SharedPreferences sp = context.getSharedPreferences(RequestDataStategy,
                 Context.MODE_PRIVATE);
         int index = sp.getInt(DataIndex, 0);

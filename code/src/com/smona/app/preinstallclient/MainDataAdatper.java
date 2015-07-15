@@ -2,25 +2,18 @@ package com.smona.app.preinstallclient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.smona.app.preinstallclient.data.IDataSource;
 import com.smona.app.preinstallclient.data.ItemInfo;
 import com.smona.app.preinstallclient.data.db.ClientSettings;
 import com.smona.app.preinstallclient.download.DownloadInfo;
 import com.smona.app.preinstallclient.download.DownloadProxy;
-import com.smona.app.preinstallclient.util.LogUtil;
-import com.smona.app.preinstallclient.view.ContainerSpace;
 import com.smona.app.preinstallclient.view.Element;
 
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 
 @SuppressLint({ "InflateParams", "ViewHolder" })

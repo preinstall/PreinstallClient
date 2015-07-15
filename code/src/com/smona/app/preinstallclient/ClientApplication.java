@@ -1,7 +1,6 @@
 package com.smona.app.preinstallclient;
 
-import com.smona.app.preinstallclient.control.IconCache;
-import com.smona.app.preinstallclient.control.ImageCacheStrategy;
+import com.smona.app.preinstallclient.control.ImageLoaderManager;
 import com.smona.app.preinstallclient.download.DownloadProxy;
 import com.smona.app.preinstallclient.util.LogUtil;
 
@@ -13,7 +12,6 @@ public class ClientApplication extends Application {
     private static final String TAG = "ClientApplication";
 
     private ProcessModel mModel;
-    private IconCache mIconCache;
 
     @Override
     public void onCreate() {
@@ -22,10 +20,9 @@ public class ClientApplication extends Application {
     }
 
     private void init() {
-        ImageCacheStrategy.getInstance().initCacheStrategy(this);
+        ImageLoaderManager.getInstance().initImageLoader(this);
         DownloadProxy.setAppContext(this);
-        mIconCache = new IconCache(this);
-        mModel = new ProcessModel(this, mIconCache);
+        mModel = new ProcessModel(this);
         reigster();
     }
 
@@ -43,9 +40,5 @@ public class ClientApplication extends Application {
 
     public ProcessModel getProcessModel() {
         return mModel;
-    }
-
-    public IconCache getIconCache() {
-        return mIconCache;
     }
 }
