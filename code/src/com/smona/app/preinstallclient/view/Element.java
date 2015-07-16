@@ -74,7 +74,6 @@ public class Element extends LinearLayout implements OnDownListener {
     @SuppressLint("NewApi")
     @Override
     public void onStatusChange(int status) {
-        LogUtil.d(TAG, "onStatusChange status:  " + status);
         Integer resid = STATUS_MAPS.get(status);
         if (resid != null && resid > 0) {
             mStatus.setBackgroundDrawable(null);

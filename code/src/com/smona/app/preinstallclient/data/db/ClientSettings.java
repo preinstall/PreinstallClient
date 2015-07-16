@@ -1,8 +1,5 @@
 package com.smona.app.preinstallclient.data.db;
 
-import com.smona.app.preinstallclient.R;
-import com.smona.app.preinstallclient.download.DownloadProxy;
-
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -36,9 +33,13 @@ public class ClientSettings {
         public static final String APPICONURL = "appIconUrl";
         public static final String SDKVERSION = "sdkVersion";
         public static final String INDEX = "appindex";
+        public static final String ISDELETE = "isDelete"; // 0--exist, 1--delete
         public static final String ISNEW = "isnew";
         public static final String DOWNLOADSTATUS = "downloadStatus";
         public static final String DOWNLOADFILEPATH = "downloadfilepath";
+        
+        public static final int DELETE_NO = 0;
+        public static final int DELETE_YES = 1;
 
         public static Uri getContentUri(long id, boolean notify) {
             return Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME + "/"
@@ -48,9 +49,10 @@ public class ClientSettings {
         public static final String SQL_CREATE_TABLE = "CREATE TABLE "
                 + TABLE_NAME + " ( " + APPID + TEXT + PACKAGENAME + PRIMARY_KEY
                 + APPCLASS + TEXT + APPNAME + TEXT + APPURL + TEXT + APPSIZE
-                + FLOAT + APPICONURL + TEXT + SDKVERSION + TEXT
-                + DOWNLOADFILEPATH + TEXT + ISNEW + INTEGER + " , " + INDEX
-                + INTEGER + " , " + DOWNLOADSTATUS + INTEGER + ")";
+                + FLOAT + APPICONURL + TEXT + SDKVERSION + TEXT + ISDELETE
+                + INTEGER + " DEFAULT 0, " + DOWNLOADFILEPATH + TEXT + ISNEW
+                + INTEGER + " , " + INDEX + INTEGER + " , " + DOWNLOADSTATUS
+                + INTEGER + ")";
     }
 
 }

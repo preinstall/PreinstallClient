@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.smona.app.preinstallclient.AbstractDataAdapter;
 import com.smona.app.preinstallclient.MainDataAdatper;
 import com.smona.app.preinstallclient.MainActivity;
 import com.smona.app.preinstallclient.ProcessModel;
@@ -15,14 +14,11 @@ import com.smona.app.preinstallclient.control.DragSource;
 import com.smona.app.preinstallclient.control.DropTarget;
 import com.smona.app.preinstallclient.data.DragInfo;
 import com.smona.app.preinstallclient.data.IDataSource;
-import com.smona.app.preinstallclient.data.ItemInfo;
 import com.smona.app.preinstallclient.data.db.MainDataSource;
 import com.smona.app.preinstallclient.download.DownloadInfo;
-import com.smona.app.preinstallclient.download.DownloadProxy;
 import com.smona.app.preinstallclient.util.ClientAnimUtils;
 import com.smona.app.preinstallclient.util.ClientViewPropertyAnimator;
 import com.smona.app.preinstallclient.util.LogUtil;
-import com.smona.app.preinstallclient.view.ScrollLayout.OnScreenChangeListenerDataLoad;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -36,7 +32,6 @@ import android.graphics.Rect;
 import android.graphics.Region.Op;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
@@ -48,7 +43,6 @@ public class ContainerSpace extends FrameLayout implements DragSource,
     private static final String TAG = "ContainerSpace";
 
     private MainActivity mMain;
-    private Button mDownloadCount = null;
 
     private IDataSource mDataSource = null;
 
@@ -80,7 +74,6 @@ public class ContainerSpace extends FrameLayout implements DragSource,
         gridView = (RelativeLayout) findViewById(R.id.gridView);
         mScrollLayout = (ScrollLayout) findViewById(R.id.ScrollLayout);
         pageControl = (PageControlView) findViewById(R.id.pageControl);
-        mDownloadCount = (Button) findViewById(R.id.download_count);
     }
 
     public void setup(MainActivity main, DragController dragController) {

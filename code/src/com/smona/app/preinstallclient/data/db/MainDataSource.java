@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -13,7 +14,7 @@ import com.smona.app.preinstallclient.util.LogUtil;
 
 public class MainDataSource extends AbstractDataSource {
 
-    private static final String TAG = "DBDataSource";
+    private static final String TAG = "MainDataSource";
 
     public MainDataSource(Context context) {
         super(context);
@@ -21,19 +22,27 @@ public class MainDataSource extends AbstractDataSource {
 
     @Override
     protected void initDatas() {
-        List<ItemInfo> datas = queryDBDatas(mContext);
+        List<ItemInfo> datas = queryDBDatas(mContext,
+                ClientSettings.ItemColumns.ISDELETE + "=?",
+                new String[] { ClientSettings.ItemColumns.DELETE_NO + "" });
         if (datas.size() > 0) {
             mDatas.addAll(datas);
         }
     }
 
     public static List<ItemInfo> queryDBDatas(Context context) {
+        return queryDBDatas(context, null, null);
+    }
+
+    private static List<ItemInfo> queryDBDatas(Context context,
+            String conditions, String[] selectArgs) {
         List<ItemInfo> values = new ArrayList<ItemInfo>();
         ContentResolver resolver = context.getContentResolver();
         Cursor c = null;
         try {
             c = resolver.query(ClientSettings.ItemColumns.CONTENT_URI, null,
-                    null, null, ClientSettings.ItemColumns.INDEX + " ASC ");
+                    conditions, selectArgs, ClientSettings.ItemColumns.INDEX
+                            + " ASC ");
             boolean canRead = c != null;
             if (canRead) {
                 int appidIndex = c
@@ -89,8 +98,32 @@ public class MainDataSource extends AbstractDataSource {
         return values;
     }
 
+    private boolean updateDBData(Object object) {
+        if (!(object instanceof ItemInfo)) {
+            return false;
+        }
+        ItemInfo info = (ItemInfo) object;
+        ContentResolver resolver = mContext.getContentResolver();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(ClientSettings.ItemColumns.ISDELETE, "1");
+            int count = resolver.update(ClientSettings.ItemColumns.CONTENT_URI,
+                    values, ClientSettings.ItemColumns.PACKAGENAME + "=?",
+                    new String[] { info.packageName });
+            return count > 0;
+        } catch (Exception e) {
+            LogUtil.d(TAG, "queryDBDatas e: " + e);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean remove(Object object) {
-        boolean success = super.remove(object);
-        return success;
+
+        boolean memActionSuccess = super.remove(object);
+        boolean dbActionSuccess = updateDBData(object);
+        LogUtil.d(TAG, "remove memActionSuccess: " + memActionSuccess
+                + ", dbActionSuccess: " + dbActionSuccess);
+        return memActionSuccess && dbActionSuccess;
     }
 }
