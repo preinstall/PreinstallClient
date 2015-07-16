@@ -24,13 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-`
+`
         <provider
             android:name=".data.db.ClientProvider"
             android:authorities="com.smona.app.preinstallclient.clientsettings" />
-     
+
         <service
             android:name="com.smona.app.preinstallclient.UpdateInfoService"
+            android:exported="true" >
+        </service>
+        <service
+            android:name="com.smona.app.preinstallclient.AutoDownloadInWifiService"
             android:exported="true" >
         </service>
     </application>

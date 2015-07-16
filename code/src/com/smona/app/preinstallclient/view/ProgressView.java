@@ -1,7 +1,6 @@
 package com.smona.app.preinstallclient.view;
 
 import com.smona.app.preinstallclient.R;
-import com.smona.app.preinstallclient.util.LogUtil;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +9,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class ProgressView extends View {
-    private static final String TAG = "ProgressView";
     private Drawable mDownloadedDrawable;
     private float mProgressCompleted = 0;
     private long mProgressTotal = 0;
@@ -27,7 +25,6 @@ public class ProgressView extends View {
         super.layout(l, t, r, b);
         if (mProgressWidth == 0) {
             mProgressWidth = r - l;
-            LogUtil.d(TAG, "layout mProgressTotal=" + mProgressWidth);
         }
     }
 
@@ -50,7 +47,6 @@ public class ProgressView extends View {
         if (mProgressCompleted != 0 && mProgressTotal != 0
                 && mProgressWidth != 0) {
             int width = (int) (mProgressCompleted * mProgressWidth / mProgressTotal);
-            LogUtil.d(TAG, "layout width=" + width);
             mDownloadedDrawable.setBounds(0, 0, width,
                     mDownloadedDrawable.getIntrinsicHeight());
             mDownloadedDrawable.setFilterBitmap(true);

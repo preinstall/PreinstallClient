@@ -9,7 +9,7 @@ public enum RequestDataStategy {
     private static final String RequestDataStategy = "RequestDataStategy";
     private static final String DataIndex = "DataIndex";
     private static final String LAST_TIME_FLAG = "last_time";
-    private static final long ONE_HOUR = 60 * 60 * 1000;
+    public static final long ONE_HOUR = 60 * 60 * 1000;
     public static final long WAIT_TIME = 4 * ONE_HOUR;
 
     public boolean isNeedRetryQuestData(Context context) {
