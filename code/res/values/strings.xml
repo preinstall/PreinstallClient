@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">预安装客户端</string>
+    <string name="app_name">应用推荐</string>
     <string name="decription">我们为您准备了以下应用,希望您喜欢.</string>
     <string name="hot_title">热门应用</string>
     <string name="delete_target_label">"删除"</string>

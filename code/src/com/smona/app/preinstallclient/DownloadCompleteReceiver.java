@@ -1,5 +1,6 @@
 package com.smona.app.preinstallclient;
 
+import com.smona.app.preinstallclient.util.LogUtil;
 import com.smona.app.preinstallclient.util.PackageUtils;
 
 import android.app.DownloadManager;
@@ -10,8 +11,10 @@ import android.database.Cursor;
 import android.widget.Toast;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
+    private static final String TAG = "DownloadCompleteReceiver";
 
     public void onReceive(final Context context, Intent intent) {
+
         if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
 
             Toast.makeText(context, R.string.download_completed,
@@ -24,22 +27,22 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
              * long-running HTTP downloads.
              */
             DownloadManager downloadManager = (DownloadManager) context
-                    .getSystemService(Context.DOWNLOAD_SERVICE);// �����ط����ȡ���ع�����
+                    .getSystemService(Context.DOWNLOAD_SERVICE);
 
             DownloadManager.Query query = new DownloadManager.Query();
 
-            query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);// ���ù���״̬���ɹ�
+            query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);
 
-            Cursor c = downloadManager.query(query);// ��ѯ��ǰ���ع�ġ��ɹ��ļ���
+            Cursor c = downloadManager.query(query);
 
-            if (c.moveToFirst()) {// �ƶ����������ص��ļ�
+            if (c.moveToFirst()) {
                 fileName = c.getString(c
                         .getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
             }
             c.close();
-            System.out.println("======�ļ����=====" + fileName);
+            LogUtil.d(TAG, "========" + fileName);
 
-            final String localfileName = fileName;// ����·��
+            final String localfileName = fileName;
 
             new Thread() {
                 public void run() {

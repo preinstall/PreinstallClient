@@ -122,6 +122,7 @@ public class ProcessModel extends BroadcastReceiver {
             LogUtil.d(TAG, "bindData start: ");
             if (noRecyleCallback()) {
                 final IDataSource dataSource = createDataSource(mApp);
+                filterDulicateMemory(mApp, dataSource.getMdatas());
                 Runnable r = new Runnable() {
                     public void run() {
                         mCallbacks.get().bindItems(dataSource);
