@@ -35,7 +35,7 @@ public class ProcessModel extends BroadcastReceiver {
     public static final boolean DEBUG = true;
     public static final boolean DEBUG_DATA = false;
     public static final boolean TEST_EVN_DEBUG = false;
-    private ClientApplication mApp;
+    private Context mApp;
     private DeferredHandler mHandler = new DeferredHandler();
     private static final HandlerThread WORKER_THREAD = new HandlerThread(
             "loader");
@@ -49,7 +49,7 @@ public class ProcessModel extends BroadcastReceiver {
     private WeakReference<Callbacks> mCallbacks;
     private final Object mLock = new Object();
 
-    ProcessModel(ClientApplication app) {
+    ProcessModel(Context app) {
         mApp = app;
     }
 
@@ -180,7 +180,7 @@ public class ProcessModel extends BroadcastReceiver {
         }
     }
 
-    public static synchronized void saveToDB(ClientApplication mApp,
+    public static synchronized void saveToDB(Context mApp,
             List<ItemInfo> datas) {
         ContentResolver contentResolver = mApp.getContentResolver();
         LogUtil.d(TAG, "datas: " + datas.size());
@@ -200,9 +200,9 @@ public class ProcessModel extends BroadcastReceiver {
         }
     }
 
-    public static void filterDulicateMemory(ClientApplication mApp,
+    public static void filterDulicateMemory(Context context,
             List<ItemInfo> datas) {
-        PackageManager manager = mApp.getPackageManager();
+        PackageManager manager = context.getPackageManager();
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> memoryDatas = manager
@@ -222,9 +222,9 @@ public class ProcessModel extends BroadcastReceiver {
         }
     }
 
-    public static void filterDulicateDB(ClientApplication mApp,
+    public static void filterDulicateDB(Context context,
             List<ItemInfo> datas) {
-        List<ItemInfo> dbDatas = MainDataSource.queryDBDatas(mApp);
+        List<ItemInfo> dbDatas = MainDataSource.queryDBDatas(context);
         ItemInfo info = null;
         String packageName = null;
         int count = datas.size();

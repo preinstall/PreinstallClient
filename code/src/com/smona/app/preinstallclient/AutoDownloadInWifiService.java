@@ -81,6 +81,7 @@ public class AutoDownloadInWifiService extends Service {
     private void autoDownload() {
         if (CommonUtil.checkWifiInfo(this)) {
             List<ItemInfo> datas = MainDataSource.queryDBDatas(this);
+            ProcessModel.filterDulicateMemory(this, datas);
             int count = datas.size();
             int endPos = count > DOWNLOAD_FETCH_COUNT ? DOWNLOAD_FETCH_COUNT
                     : count;
