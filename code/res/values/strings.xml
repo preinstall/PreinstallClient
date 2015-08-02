@@ -7,6 +7,7 @@
     <string name="delete_target_label">"删除"</string>
     <string name="download_idle">""</string>
     <string name="download_pause">"暂停中"</string>
+    <string name="download_finish">"已下载"</string>
     <string name="download_install">"安装中"</string>
     <string name="download_downloading">"下载中"</string>
     <string name="download_failed">"下载失败"</string>
@@ -37,5 +38,14 @@
     <string name="continue_download">"继续下载"</string>
     <string name="turn_on_wifi">"打开wifi"</string>
     <string name="download_completed">"下载完成"</string>
+    <string name="no_network_connection">无法获取网络数据</string>
+    <string name="begin_download">"开始下载 "</string>
+    <!-- Gionee <lilt><2013-11-28> add for CR00958984 end -->
+
+
+    <string name="pre_install_file_erro">APK文件丢失或损坏,请重新下载</string>
+    <string name="download_manager_erro">下载管理器已停用,请开起后再下载</string>
+    <string name="dowanload_faile">下载失败!</string>
+    <string name="pre_icon_replace">已更换应用，停止该应用的下载</string>
 
 </resources>

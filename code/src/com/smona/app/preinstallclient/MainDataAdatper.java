@@ -5,13 +5,11 @@ import java.util.HashMap;
 
 import com.smona.app.preinstallclient.data.IDataSource;
 import com.smona.app.preinstallclient.data.ItemInfo;
-import com.smona.app.preinstallclient.data.db.ClientSettings;
 import com.smona.app.preinstallclient.download.DownloadInfo;
-import com.smona.app.preinstallclient.download.DownloadProxy;
+import com.smona.app.preinstallclient.download_ex.PreInstallAppManager;
 import com.smona.app.preinstallclient.view.Element;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +18,11 @@ import android.view.ViewGroup;
 public class MainDataAdatper extends AbstractDataAdapter {
 
     private ArrayList<View> mVisibleViews = new ArrayList<View>();
-    private Context context;
+    private Context mContext;
 
     public MainDataAdatper(Context context, IDataSource datasource) {
         super(context, datasource);
-        this.context = context;
+        this.mContext = context;
     }
 
     @Override
@@ -33,7 +31,6 @@ public class MainDataAdatper extends AbstractDataAdapter {
         if (convertView == null) {
             convertView = createElement();
         }
-
         setConvertView(convertView, info);
         return convertView;
     }
@@ -41,12 +38,18 @@ public class MainDataAdatper extends AbstractDataAdapter {
     @SuppressLint("NewApi")
     private View createElement() {
         View convertView = mLayoutInflater.inflate(R.layout.item_main, null);
-        mVisibleViews.add(convertView);
         return convertView;
     }
 
     private void setConvertView(View convertView, ItemInfo info) {
-        ((Element) convertView).initUI(info);
+        Element element = (Element) convertView;
+        element.initUI(info);
+        PreInstallAppManager.getPreInstallAppManager(
+                mContext.getApplicationContext()).setInfoDownloadListener(
+                info.packageName, info);
+        PreInstallAppManager.getPreInstallAppManager(
+                mContext.getApplicationContext()).setListener(info.packageName,
+                element);
     }
 
     public int getNeedCount() {
@@ -54,39 +57,6 @@ public class MainDataAdatper extends AbstractDataAdapter {
     }
 
     public void refreshUI(HashMap<String, DownloadInfo> values) {
-        super.refreshUI(values);
-
-        if (values.size() == 0) {
-            return;
-        }
-        // LogUtil.d("Element", "values: " + values);
-        ItemInfo tag;
-        for (View view : mVisibleViews) {
-            tag = (ItemInfo) view.getTag();
-            if (tag != null) {
-                DownloadInfo info = values.get(tag.appUrl);
-                // LogUtil.d("tag", "tag: " + tag + ",info: " + info);
-                if (info == null) {
-                    continue;
-                }
-                // LogUtil.d("Test", "refreshUI getProgressTotal:  " +
-                // info.total+ "onProgress progress:  " + info.process);
-                ((Element) view).onProgress(info.total, info.process);
-                ((Element) view).onStatusChange(info.status);
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
-                        info.status);
-                ProcessModel.updateDB(context, tag.packageName, contentValues);
-                if (info.status == DownloadProxy.STATUS_SUCCESSFUL) {
-                    contentValues = new ContentValues();
-                    contentValues.put(
-                            ClientSettings.ItemColumns.DOWNLOADFILEPATH,
-                            info.downloadPath);
-                    ProcessModel.updateDB(context, tag.packageName,
-                            contentValues);
-                }
-            }
-        }
     }
 
     public ArrayList<View> getmVisibleViews() {

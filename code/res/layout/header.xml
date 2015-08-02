@@ -20,19 +20,6 @@
             android:textColor="#FF5400"
             android:layout_centerVertical="true"
             android:text="@string/hot_title" />
-        
-        <Button
-            android:id="@+id/download_count"
-            android:layout_width="@dimen/download_count_size"
-            android:layout_marginRight="@dimen/download_count_marginRight"
-            android:layout_marginTop="@dimen/download_count_marginTop"
-            android:layout_height="@dimen/download_count_size"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:visibility="invisible"
-            android:textSize="@dimen/download_count_textsize"
-            android:text="@string/download_count"
-            android:background="@drawable/download_count" />
     </RelativeLayout>
 
     <LinearLayout

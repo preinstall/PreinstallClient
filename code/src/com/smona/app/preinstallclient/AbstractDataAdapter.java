@@ -19,16 +19,11 @@ public abstract class AbstractDataAdapter extends BaseAdapter {
     protected IDataSource mDataSource;
     protected Context mContext;
     protected LayoutInflater mLayoutInflater;
-    protected ICallback mCallback;
 
     public AbstractDataAdapter(Context context, IDataSource datasource) {
         mContext = context;
         mDataSource = datasource;
         mLayoutInflater = LayoutInflater.from(mContext);
-    }
-
-    public void registerCallback(ICallback callback) {
-        mCallback = callback;
     }
 
     @Override

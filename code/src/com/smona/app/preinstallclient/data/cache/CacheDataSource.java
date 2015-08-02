@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
 import com.smona.app.preinstallclient.data.AbstractDataSource;
-import com.smona.app.preinstallclient.data.IDataSource;
 import com.smona.app.preinstallclient.data.ItemInfo;
 
 public class CacheDataSource extends AbstractDataSource {

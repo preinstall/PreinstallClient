@@ -15,7 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 
 public class AutoRefreshDataService extends Service {
-    private static final String TAG = "UpdateInfoService";
+    private static final String TAG = "AutoRefreshDataService";
     private ClientApplication mApp;
 
     @SuppressLint("HandlerLeak")

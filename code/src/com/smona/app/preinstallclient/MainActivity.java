@@ -1,26 +1,23 @@
 package com.smona.app.preinstallclient;
 
-import java.util.HashMap;
 import com.smona.app.preinstallclient.ProcessModel.Callbacks;
 import com.smona.app.preinstallclient.control.DragController;
 import com.smona.app.preinstallclient.control.DropTarget;
 import com.smona.app.preinstallclient.data.IDataSource;
 import com.smona.app.preinstallclient.data.ItemInfo;
 import com.smona.app.preinstallclient.data.db.ClientSettings;
-import com.smona.app.preinstallclient.download.DownloadHandler;
-import com.smona.app.preinstallclient.download.DownloadInfo;
 import com.smona.app.preinstallclient.download.DownloadObsever;
 import com.smona.app.preinstallclient.download.DownloadProxy;
-import com.smona.app.preinstallclient.download.IDownloadCallback;
+import com.smona.app.preinstallclient.download_ex.PreInstallAppManager;
 import com.smona.app.preinstallclient.util.CommonUtil;
 import com.smona.app.preinstallclient.util.LogUtil;
-import com.smona.app.preinstallclient.util.PackageUtils;
 import com.smona.app.preinstallclient.view.CommonConfirmDialog;
 import com.smona.app.preinstallclient.view.ContainerSpace;
 import com.smona.app.preinstallclient.view.DragLayer;
 import com.smona.app.preinstallclient.view.DropTargetBar;
+import com.smona.app.preinstallclient.view.Element;
+
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,7 +27,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
@@ -41,12 +37,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener,
-        OnItemLongClickListener, Callbacks, OnClickListener, IDownloadCallback {
-    private static final float APK_MAX_SIZE = 15;
+        OnItemLongClickListener, Callbacks, OnClickListener {
     private static final String SP_NAME = "preinstallclient";
     private static final String BIG_APP_DOWNLOAD_NAME = "preinstallclient_big_app_download";
     private static final String TAG = "MainActivity";
-    private MainActivity _this;
     // layout
     private DragLayer mDragLayer = null;
     private ContainerSpace mContainer = null;
@@ -54,18 +48,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     private NetworkReceiver mReceiver;
 
     // work thread and download
-    private DownloadObsever mObserver;
-    private DownloadHandler mWorkHandler = null;
-    private HandlerThread mWorkThread = null;
-    private DownloadCompleteReceiver downloadCompleteReceiver = new DownloadCompleteReceiver();
-    private SharedPreferences sp;
-    private CommonConfirmDialog confirmDialog;
-    private ItemInfo itemIfo;
-    private DownloadObsever mdbObserver;
-    private boolean bFirstIn = true;
+    private SharedPreferences mSharePer;
+    private CommonConfirmDialog mConfirmDialog;
+    private ItemInfo mItemIfo;
+    private DownloadObsever mDataChangeObserver;
+    private boolean mIsFirstIn = true;
 
     @SuppressLint("HandlerLeak")
-    private Handler dbChangedHandler = new Handler() {
+    private Handler mDataChangedHandler = new Handler() {
         public void handleMessage(Message msg) {
             initData();
         }
@@ -75,13 +65,12 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        bFirstIn = true;
-        _this = this;
+        PreInstallAppManager.getPreInstallAppManager(getApplicationContext())
+                .init(getApplicationContext());
         initView();
         registerNetwork();
         initData();
         initDownload();
-        // showFirstConfirmDialog();
 
         startupService();
     }
@@ -112,7 +101,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         DropTargetBar dropTarget = (DropTargetBar) findViewById(R.id.droptarget);
         dropTarget.setup(this, dragController);
 
-        sp = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+        mSharePer = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
     }
 
     private void initData() {
@@ -120,6 +109,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         ProcessModel model = app.getProcessModel();
         model.initialize(this);
         model.startLoadTask();
+
+        mIsFirstIn = true;
     }
 
     private void registerNetwork() {
@@ -134,24 +125,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     }
 
     private void initDownload() {
-        destroyDownload();
-        mWorkThread = new HandlerThread("Downloading");
-        mWorkThread.start();
-        mWorkHandler = new DownloadHandler(mWorkThread.getLooper(), this);
-        mWorkHandler.setCallback(this);
-        mObserver = new DownloadObsever(mWorkHandler);
-        mdbObserver = new DownloadObsever(dbChangedHandler);
+        mDataChangeObserver = new DownloadObsever(mDataChangedHandler);
         getContentResolver().registerContentObserver(
-                DownloadHandler.DOWNLOAD_URI, true, mObserver);
-        getContentResolver().registerContentObserver(
-                ClientSettings.ItemColumns.CONTENT_URI, true, mdbObserver);
-    }
-
-    private void destroyDownload() {
-        if (mWorkThread != null) {
-            mWorkThread.quit();
-            mWorkThread = null;
-        }
+                ClientSettings.ItemColumns.CONTENT_URI, true,
+                mDataChangeObserver);
     }
 
     @Override
@@ -162,31 +139,15 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         Object obj = view.getTag();
         LogUtil.d(TAG, "view: " + view + ", obj: " + obj);
         if (obj instanceof ItemInfo) {
-            itemIfo = (ItemInfo) obj;
-            if (itemIfo == null) {
-                return;
-            }
-            if (itemIfo.downloadStatus == ItemInfo.STATUS_SUCCESSFUL) {
-                new Thread() {
-                    public void run() {
-                        PackageUtils.install(_this, itemIfo.downloadFilePath);
-                    }
-                }.start();
-                return;
-            }
-            if (itemIfo.isnew == ItemInfo.NEW_FLAG) {
-                view.findViewById(R.id.new_flag).setVisibility(View.GONE);
-                updateNewNewFalg(itemIfo);
-            }
-            boolean bNeedShowSizeConfirm = sp.getBoolean(BIG_APP_DOWNLOAD_NAME,
-                    true);
-            if (itemIfo.appSize >= APK_MAX_SIZE && bNeedShowSizeConfirm
-                    && CommonUtil.checkMobileNetworkInfo(_this)) {
-                showBigApkConfirmDialogAndChangeToWifi();
-            } else {
-                downloadDate();
-            }
+            mItemIfo = (ItemInfo) obj;
         }
+        if (mItemIfo.isnew == ItemInfo.NEW_FLAG) {
+            mItemIfo.isnew = ItemInfo.UNNEW_FLAG;
+            view.findViewById(R.id.new_flag).setVisibility(View.GONE);
+            updateNewNewFalg(mItemIfo);
+        }
+        PreInstallAppManager.getPreInstallAppManager(this).execute(
+                (Element) view, this);
 
     }
 
@@ -202,11 +163,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         Object obj = view.getTag();
         LogUtil.d(TAG, "view: " + view + ", obj: " + obj);
         if (obj instanceof ItemInfo) {
-            itemIfo = (ItemInfo) obj;
-            if (itemIfo == null) {
-                return false;
-            }
-            if (itemIfo.downloadStatus == ItemInfo.STATUS_RUNNING) {
+            mItemIfo = (ItemInfo) obj;
+            if (mItemIfo.downloadStatus == ItemInfo.STATUS_RUNNING) {
                 return false;
             }
         }
@@ -225,8 +183,8 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     @Override
     public void bindItems(IDataSource dataSource) {
         mContainer.setDataSource(dataSource);
-        if (bFirstIn) {
-            bFirstIn = false;
+        if (mIsFirstIn) {
+            mIsFirstIn = false;
             autoWifiDownload(dataSource);
         }
     }
@@ -247,8 +205,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     protected void onResume() {
         super.onResume();
         actionNetwork();
-        registerReceiver(downloadCompleteReceiver, new IntentFilter(
-                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     private void actionNetwork() {
@@ -266,14 +222,14 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(downloadCompleteReceiver);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unRegisterNetwork();
-        destroyDownload();
+        PreInstallAppManager.getPreInstallAppManager(
+                this.getApplicationContext()).destroyGnPreinstallation();
     }
 
     @Override
@@ -309,59 +265,48 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         }
     }
 
-    @Override
-    public void refreshUI(final HashMap<String, DownloadInfo> values) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mContainer != null) {
-                    mContainer.refreshUI(values);
-                }
-            }
-        });
-    }
-
     @SuppressLint("HandlerLeak")
     private void showBigApkConfirmDialogAndChangeToWifi() {
-        boolean bNeedShowSizeConfirm = sp.getBoolean(BIG_APP_DOWNLOAD_NAME,
-                true);
+        boolean bNeedShowSizeConfirm = mSharePer.getBoolean(
+                BIG_APP_DOWNLOAD_NAME, true);
         if (bNeedShowSizeConfirm == true) {
             String title = getString(R.string.check_download_title);
             String showMsg = getString(R.string.check_size_message);
-            confirmDialog = new CommonConfirmDialog(this,
+            mConfirmDialog = new CommonConfirmDialog(this,
                     R.layout.common_confirm_dialog, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
                             if (msg.what == 1 || msg.what == 3) {
                                 if (msg.what == 1) {
-                                    sp.edit()
+                                    mSharePer
+                                            .edit()
                                             .putBoolean(BIG_APP_DOWNLOAD_NAME,
                                                     false).commit();
                                 }
-                                if (confirmDialog != null) {
-                                    confirmDialog.dismiss();
-                                    confirmDialog = null;
+                                if (mConfirmDialog != null) {
+                                    mConfirmDialog.dismiss();
+                                    mConfirmDialog = null;
                                 }
                                 changeToWifi();
                             } else {
-                                if (confirmDialog != null) {
-                                    confirmDialog.dismiss();
-                                    confirmDialog = null;
+                                if (mConfirmDialog != null) {
+                                    mConfirmDialog.dismiss();
+                                    mConfirmDialog = null;
                                 }
-                                downloadDate();
+                                downloadData();
                             }
                         }
                     }, title, showMsg, getString(R.string.turn_on_wifi),
                     getString(R.string.continue_download));
-            confirmDialog.setCanceledOnTouchOutside(false);
-            confirmDialog.show();
-            Window window = confirmDialog.getWindow();
+            mConfirmDialog.setCanceledOnTouchOutside(false);
+            mConfirmDialog.show();
+            Window window = mConfirmDialog.getWindow();
             window.setGravity(Gravity.CENTER);
         }
     }
 
-    private void downloadDate() {
-        DownloadProxy.getInstance().equeue(itemIfo);
+    private void downloadData() {
+        DownloadProxy.getInstance().equeue(mItemIfo);
     }
 
     private void changeToWifi() {

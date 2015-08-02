@@ -2,14 +2,16 @@ package com.smona.app.preinstallclient.view;
 
 import java.util.HashMap;
 
+import com.smona.app.preinstallclient.ProcessModel;
 import com.smona.app.preinstallclient.R;
 import com.smona.app.preinstallclient.control.ImageLoaderManager;
 import com.smona.app.preinstallclient.data.ItemInfo;
-import com.smona.app.preinstallclient.data.ItemInfo.OnDownListener;
-import com.smona.app.preinstallclient.download.DownloadProxy;
+import com.smona.app.preinstallclient.data.db.ClientSettings;
+import com.smona.app.preinstallclient.download_ex.PreInstallAppManager.DownloadListener;
 import com.smona.app.preinstallclient.util.LogUtil;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -18,8 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class Element extends LinearLayout implements OnDownListener {
+public class Element extends LinearLayout implements DownloadListener {
     private static final String TAG = "Element";
+
+    public enum State {
+        NONE, ON_DWONLOAD, DOWNLOAD_FINISH, DWONLOADED_NOT_INSTALL, ON_INSTALL, INSTALLED
+    }
+
+    protected State mState = State.NONE;
 
     private ProgressView mProgress;
     private TextView mTitle;
@@ -29,7 +37,7 @@ public class Element extends LinearLayout implements OnDownListener {
     private ImageView new_flag;
 
     @SuppressLint("UseSparseArrays")
-    private static final HashMap<Integer, Integer> STATUS_MAPS = new HashMap<Integer, Integer>();
+    private static final HashMap<State, Integer> STATUS_MAPS = new HashMap<State, Integer>();
 
     public Element(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -48,32 +56,15 @@ public class Element extends LinearLayout implements OnDownListener {
     }
 
     private void initDatas() {
-        STATUS_MAPS.put(DownloadProxy.STATUS_PENDING, -1);
-        STATUS_MAPS.put(DownloadProxy.STATUS_RUNNING,
-                R.string.download_downloading);
-        STATUS_MAPS.put(DownloadProxy.STATUS_PAUSED, R.string.download_pause);
-        STATUS_MAPS.put(DownloadProxy.STATUS_FAILED, R.string.download_failed);
-        STATUS_MAPS.put(DownloadProxy.STATUS_SUCCESSFUL,
-                R.string.download_install);
+        STATUS_MAPS.put(State.NONE, -1);
+        STATUS_MAPS.put(State.ON_DWONLOAD, R.string.download_downloading);
+        STATUS_MAPS.put(State.DOWNLOAD_FINISH, R.string.download_pause);
+        STATUS_MAPS.put(State.DWONLOADED_NOT_INSTALL, R.string.download_failed);
+        STATUS_MAPS.put(State.ON_INSTALL, R.string.download_install);
+        STATUS_MAPS.put(State.INSTALLED, R.string.download_installed);
     }
 
-    @Override
-    public void onProgress(int progressTotal, int progress) {
-        mProgress.setProgressTotal(progressTotal);
-        mProgress.updateProgress(progress);
-        if (progress == 0) {
-            relayoutDownstatue.setVisibility(View.VISIBLE);
-        } else {
-            relayoutDownstatue.setVisibility(View.GONE);
-        }
-        LogUtil.d(TAG,
-                "onProgress getProgressTotal:  " + mProgress.getProgressTotal()
-                        + "onProgress progress:  " + progress);
-    }
-
-    @SuppressLint("NewApi")
-    @Override
-    public void onStatusChange(int status) {
+    private void onStatusChange(int status) {
         Integer resid = STATUS_MAPS.get(status);
         if (resid != null && resid > 0) {
             mStatus.setBackgroundDrawable(null);
@@ -100,5 +91,58 @@ public class Element extends LinearLayout implements OnDownListener {
         }
         onStatusChange(info.downloadStatus);
         setTag(info);
+    }
+
+    @Override
+    public void onDownloadProgress(int progress, int total) {
+        LogUtil.d(TAG, "onProgress onDownloadProgress [" + progress + ","
+                + total + "]");
+        mProgress.setProgressTotal(total);
+        mProgress.updateProgress(progress);
+        if (progress == 0) {
+            relayoutDownstatue.setVisibility(View.VISIBLE);
+        } else {
+            relayoutDownstatue.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onDownloadstateChanged(String appPkg, State state) {
+        LogUtil.d(TAG, "onProgress onDownloadstateChanged [" + state + "]");
+        mState = state;
+        Integer resid = STATUS_MAPS.get(state);
+        if (resid != null && resid > 0) {
+            mStatus.setBackgroundDrawable(null);
+            mStatus.setText(resid);
+        }
+        if (state != State.NONE) {
+            relayoutDownstatue.setVisibility(View.GONE);
+        } else {
+            relayoutDownstatue.setVisibility(View.VISIBLE);
+        }
+        if (state == State.DOWNLOAD_FINISH) {
+            mProgress.setProgressTotal(1);
+            mProgress.updateProgress(1);
+        }
+        
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
+                state.ordinal());
+        ProcessModel.updateDB(getContext(), appPkg, contentValues);
+    }
+
+    @Override
+    public void onInstallStateChanged(String appPkg, State state) {
+        LogUtil.d(TAG, "onProgress onInstallStateChanged [" + state + "], is: "
+                + state.ordinal());
+        mState = state;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
+                state.ordinal());
+        ProcessModel.updateDB(getContext(), appPkg, contentValues);
+    }
+
+    public State getPreAppState() {
+        return mState;
     }
 }
