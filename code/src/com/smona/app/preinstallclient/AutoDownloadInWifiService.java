@@ -7,10 +7,12 @@ import java.util.List;
 
 import com.smona.app.preinstallclient.control.RequestDataStategy;
 import com.smona.app.preinstallclient.data.ItemInfo;
+import com.smona.app.preinstallclient.data.db.ClientSettings;
 import com.smona.app.preinstallclient.data.db.MainDataSource;
 import com.smona.app.preinstallclient.download.DownloadProxy;
 import com.smona.app.preinstallclient.util.CommonUtil;
 import com.smona.app.preinstallclient.util.LogUtil;
+import com.smona.app.preinstallclient.view.Element;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -22,7 +24,7 @@ public class AutoDownloadInWifiService extends Service {
 
     private static final String TAG = "AutoDownloadInWifiService";
 
-    private static final int DOWNLOAD_FETCH_COUNT = 9;
+    private static final int DOWNLOAD_FETCH_COUNT = 2;
 
     private static final String LAST_SECOND = " 23:59:59";
 
@@ -36,15 +38,20 @@ public class AutoDownloadInWifiService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         long delay = getDelayTime();
-        mRequestDownload.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                autoDownload();
-            }
-        }, delay);
+        if (delay < 0) {
+            return super.onStartCommand(intent, flags, startId);
+        }
+        mRequestDownload.removeCallbacks(mAuto);
+        mRequestDownload.postDelayed(mAuto, delay);
         return super.onStartCommand(intent, flags, startId);
     }
+
+    private Runnable mAuto = new Runnable() {
+        @Override
+        public void run() {
+            autoDownload();
+        }
+    };
 
     @SuppressLint("SimpleDateFormat")
     private long getDelayTime() {
@@ -80,7 +87,14 @@ public class AutoDownloadInWifiService extends Service {
 
     private void autoDownload() {
         if (CommonUtil.checkWifiInfo(this)) {
-            List<ItemInfo> datas = MainDataSource.queryDBDatas(this);
+            String conditions = ClientSettings.ItemColumns.ISDELETE + "=? and "
+                    + ClientSettings.ItemColumns.DOWNLOADSTATUS + "=?";
+            String[] selectArgs = new String[] {
+                    ClientSettings.ItemColumns.DELETE_NO + "",
+                    Element.State.NONE.ordinal() + "" };
+            List<ItemInfo> datas = MainDataSource.queryDBDatas(this,
+                    conditions, selectArgs);
+
             ProcessModel.filterDulicateMemory(this, datas);
             int count = datas.size();
             int endPos = count > DOWNLOAD_FETCH_COUNT ? DOWNLOAD_FETCH_COUNT
@@ -90,6 +104,8 @@ public class AutoDownloadInWifiService extends Service {
                 info = datas.get(i);
                 LogUtil.d(TAG, "autoDownload info: " + info);
                 DownloadProxy.getInstance().equeue(datas.get(i));
+                ProcessModel.updateContentDB(this, info.packageName,
+                        Element.State.DOWNLOADING);
             }
         }
     }

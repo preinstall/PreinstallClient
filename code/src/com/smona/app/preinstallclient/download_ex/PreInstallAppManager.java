@@ -7,12 +7,15 @@ import com.gionee.preinstallation.commom.FactoryPreinstallation;
 import com.gionee.preinstallation.commom.GnPreinstallation;
 import com.gionee.preinstallation.data.PreinstallationArgs;
 import com.gionee.preinstallation.download.DownloadInfo;
+import com.smona.app.preinstallclient.ProcessModel;
 import com.smona.app.preinstallclient.R;
 import com.smona.app.preinstallclient.data.ItemInfo;
+import com.smona.app.preinstallclient.data.db.ClientSettings;
 import com.smona.app.preinstallclient.util.CommonUtil;
 import com.smona.app.preinstallclient.util.LogUtil;
 import com.smona.app.preinstallclient.view.Element;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -80,20 +83,22 @@ public class PreInstallAppManager {
 
     private void startDownload(ItemInfo info, DownloadListener listener) {
         String packageName = info.packageName;
+
         // add listener for the download item
         setListener(packageName, listener);
-
         setInfoDownloadListener(packageName, info);
 
         try {
             LogUtil.d(TAG, "start download preinstall item --> " + packageName);
             mGnPreinstallation.download(getPreinstallationArgs(info));
+            listener.onDownloadstateChanged(packageName,
+                    Element.State.DOWNLOADING);
+            updateContentDB(packageName, Element.State.DOWNLOADING);
         } catch (IllegalArgumentException e) {
             LogUtil.d(TAG,
                     "start download preinstall item, throw exception --> " + e);
             e.printStackTrace();
             removeListener(packageName);
-            removeInfoDownloadListener(packageName);
             return;
         } catch (Exception ex) {
             LogUtil.d(TAG,
@@ -101,10 +106,8 @@ public class PreInstallAppManager {
                             + packageName);
             ex.printStackTrace();
             removeListener(packageName);
-            removeInfoDownloadListener(packageName);
             return;
         }
-        listener.onDownloadstateChanged(packageName, Element.State.ON_DWONLOAD);
     }
 
     private class PreInstallCallBack implements GnPreinstallation.Callback {
@@ -118,7 +121,7 @@ public class PreInstallAppManager {
             if (listener != null) {
                 listener.onDownloadstateChanged(packageName, Element.State.NONE);
             }
-            removeInfoDownloadListener(packageName);
+            updateContentDB(packageName, Element.State.NONE);
             removeListener(packageName);
             showToast(R.string.dowanload_faile);
         }
@@ -146,23 +149,15 @@ public class PreInstallAppManager {
         public void onDownloadSucc(String oldPkg, String newPkg) {
             DownloadListener listener = (DownloadListener) mDownloadListeners
                     .get(oldPkg);
-            LogUtil.d(TAG, "download success ---> " + oldPkg
-                    + ", apkPackageName: " + newPkg + ", listener: "
-                    + listener);
+
             if (listener != null) {
                 listener.onDownloadstateChanged(oldPkg,
-                        Element.State.DOWNLOAD_FINISH);
+                        Element.State.DOWNLOADED);
             }
-            ItemInfo info = removeInfoDownloadListener(oldPkg);
-
-            if (info != null) {
-                // info.mMapPackageName = apkPackageName;
-                // info.isOnDownload = false;
-            } else {
-                LogUtil.e(TAG,
-                        "callback for download success, but has excepstion --> "
-                                + oldPkg);
-            }
+            removeListener(oldPkg);
+            LogUtil.d(TAG, "download success ---> " + oldPkg
+                    + ", apkPackageName: " + newPkg + ", listener: " + listener);
+            updateContentDB(oldPkg, Element.State.DOWNLOADED);
         }
 
         @Override
@@ -173,13 +168,10 @@ public class PreInstallAppManager {
             LogUtil.d(TAG, "silent install start ---> " + oldPackageName
                     + ", listener: " + listener);
             if (listener != null) {
-                ItemInfo info = removeInfoDownloadListener(oldPackageName);
-                if (info != null) {
-                    // info.mMapPackageName = apkPackageName;
-                }
                 listener.onInstallStateChanged(oldPackageName,
-                        Element.State.ON_INSTALL);
+                        Element.State.INSTALLING);
             }
+            updateContentDB(oldPackageName, Element.State.INSTALLING);
         }
 
         @Override
@@ -191,7 +183,12 @@ public class PreInstallAppManager {
             if (listener != null) {
                 listener.onInstallStateChanged(packageName,
                         Element.State.INSTALLED);
-                removeListener(packageName);
+            }
+            removeListener(packageName);
+            updateContentDB(packageName, Element.State.INSTALLED);
+            ItemInfo info = removeInfoDownloadListener(packageName);
+            if (info != null) {
+                deleteDownloadTask(info);
             }
         }
 
@@ -204,23 +201,27 @@ public class PreInstallAppManager {
             if (listener != null) {
                 listener.onInstallStateChanged(packageName,
                         Element.State.DWONLOADED_NOT_INSTALL);
-                removeListener(packageName);
             }
+            removeListener(packageName);
+            updateContentDB(packageName, Element.State.DWONLOADED_NOT_INSTALL);
         }
 
         @Override
         public void onSysInstallSucc(String packageName) {
             DownloadListener listener = (DownloadListener) mDownloadListeners
                     .get(packageName);
+            ItemInfo info = removeInfoDownloadListener(packageName);
             LogUtil.d(TAG, "system install success---> " + packageName
-                    + ",listener: " + listener);
+                    + ",listener: " + listener + ", info: " + info);
             if (listener != null) {
                 listener.onInstallStateChanged(packageName,
                         Element.State.INSTALLED);
-                removeListener(packageName);
             }
-
+            updateContentDB(packageName, Element.State.INSTALLED);
             removeListener(packageName);
+            if (info != null) {
+                deleteDownloadTask(info);
+            }
         }
 
         @Override
@@ -241,6 +242,7 @@ public class PreInstallAppManager {
                     .get(packageName);
             if (listener != null) {
                 listener.onDownloadstateChanged(packageName, Element.State.NONE);
+                updateContentDB(packageName, Element.State.NONE);
                 Element shortcut = (Element) removeListener(packageName);
                 ItemInfo info = (ItemInfo) shortcut.getTag();
                 clickPreInstallShortcut(info, shortcut, shortcut.getContext(),
@@ -263,15 +265,18 @@ public class PreInstallAppManager {
             LogUtil.d(TAG, "start system install ---> " + oldPkg
                     + ",listener: " + listener + ", apkPackageName: " + newPkg);
             if (listener != null) {
-                ItemInfo info = removeInfoDownloadListener(oldPkg);
-                if (info != null) {
-                    // info.mMapPackageName = apkPackageName;
-                }
                 listener.onInstallStateChanged(oldPkg,
                         Element.State.DWONLOADED_NOT_INSTALL);
             }
-
+            updateContentDB(oldPkg, Element.State.DWONLOADED_NOT_INSTALL);
         }
+    }
+
+    private void updateContentDB(String packageName, Element.State state) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
+                state.ordinal());
+        ProcessModel.updateDB(mContext, packageName, contentValues);
     }
 
     public static interface DownloadListener {
@@ -282,17 +287,16 @@ public class PreInstallAppManager {
         public void onInstallStateChanged(String appPkg, Element.State state);
     }
 
-    private Object removeListener(String key) {
-        return mDownloadListeners.remove(key);
-    }
-
     public void setListener(String key, DownloadListener listener) {
         mDownloadListeners.put(key, listener);
     }
 
+    private Object removeListener(String key) {
+        return mDownloadListeners.remove(key);
+    }
+
     public void setInfoDownloadListener(String key, ItemInfo info) {
         mDownloadItems.put(key, info);
-        // info.isOnDownload = true;
     }
 
     private ItemInfo removeInfoDownloadListener(String key) {
@@ -307,26 +311,31 @@ public class PreInstallAppManager {
     public void execute(Element shortcut, Context context) {
         long time = System.currentTimeMillis();
         long delta = time - mLastPreInstallShortcutClickTime;
-        LogUtil.d(TAG, "current state: " + shortcut.getPreAppState()
-                + ", delta: " + delta);
+        LogUtil.d(TAG, "current state: " + shortcut.getTag() + ", delta: "
+                + delta);
+
         if (delta <= 500) {
+            return;
+        }
+
+        Object obj = shortcut.getTag();
+        if (!(obj instanceof ItemInfo)) {
             return;
         }
 
         ItemInfo itemInfo = (ItemInfo) (shortcut.getTag());
 
-        if (shortcut.getPreAppState() == Element.State.ON_DWONLOAD
-                || shortcut.getPreAppState() == Element.State.ON_INSTALL
-                || shortcut.getPreAppState() == Element.State.INSTALLED) {
+        if (itemInfo.downloadStatus == Element.State.DOWNLOADING
+                || itemInfo.downloadStatus == Element.State.INSTALLED) {
 
-        } else if (shortcut.getPreAppState() == Element.State.DWONLOADED_NOT_INSTALL) {
-
+        } else if (itemInfo.downloadStatus == Element.State.DWONLOADED_NOT_INSTALL
+                || itemInfo.downloadStatus == Element.State.DOWNLOADED
+                || itemInfo.downloadStatus == Element.State.INSTALLING) {
             String packageName = itemInfo.packageName;
-            if (mDownloadListeners.get(packageName) == null) {
-                setListener(packageName, shortcut);
-            }
+            setListener(packageName, shortcut);
+
             mGnPreinstallation.sysInstall(getPreinstallationArgs(itemInfo));
-        } else if (shortcut.getPreAppState() == Element.State.NONE) {
+        } else if (itemInfo.downloadStatus == Element.State.NONE) {
             clickPreInstallShortcut(itemInfo, shortcut, context, true);
         }
         mLastPreInstallShortcutClickTime = System.currentTimeMillis();
@@ -349,7 +358,6 @@ public class PreInstallAppManager {
         removeInfoDownloadListener(info.packageName);
         removeListener(info.packageName);
         mGnPreinstallation.deleteDownloadTask(args);
-        args = null;
     }
 
     private void showToast(int resuorceId) {

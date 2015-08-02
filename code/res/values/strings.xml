@@ -6,10 +6,9 @@
     <string name="hot_title">热门应用</string>
     <string name="delete_target_label">"删除"</string>
     <string name="download_idle">""</string>
-    <string name="download_pause">"暂停中"</string>
-    <string name="download_finish">"已下载"</string>
-    <string name="download_install">"安装中"</string>
     <string name="download_downloading">"下载中"</string>
+    <string name="download_finish">"安装"</string>
+    <string name="download_install">"安装中"</string>
     <string name="download_failed">"下载失败"</string>
     <string name="download_installed">"已安装"</string>
     <string name="check_data_dont_hint">不再提示</string>

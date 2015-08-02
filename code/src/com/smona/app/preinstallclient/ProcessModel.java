@@ -16,6 +16,7 @@ import com.smona.app.preinstallclient.util.Constant;
 import com.smona.app.preinstallclient.util.HttpUtils;
 import com.smona.app.preinstallclient.util.LogUtil;
 import com.smona.app.preinstallclient.util.ParseJsonString;
+import com.smona.app.preinstallclient.view.Element;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -88,9 +89,8 @@ public class ProcessModel extends BroadcastReceiver {
         String action = intent.getAction();
         if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
             final String packageName = intent.getData().getSchemeSpecificPart();
-            int result = deleteDB(context, packageName);
+            updateContentDB(context, packageName, Element.State.INSTALLED);
             startLoadTask();
-            LogUtil.d(TAG, "onReceive result: " + result);
         } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
 
         }
@@ -187,7 +187,7 @@ public class ProcessModel extends BroadcastReceiver {
         Cursor c;
         for (int i = 0; i < datas.size(); i++) {
             ItemInfo info = datas.get(i);
-            c = contentResolver.query(ClientSettings.ItemColumns.CONTENT_URI,
+            c = contentResolver.query(ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION,
                     null, ClientSettings.ItemColumns.PACKAGENAME + " = '"
                             + info.packageName + "'", null, null);
             if (c == null || c.getCount() == 0) {
@@ -251,10 +251,10 @@ public class ProcessModel extends BroadcastReceiver {
         values.put(ClientSettings.ItemColumns.APPSIZE, info.appSize);
         values.put(ClientSettings.ItemColumns.SDKVERSION, info.sdkVersion);
         values.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
-                info.downloadStatus);
+                info.downloadStatus.ordinal());
         values.put(ClientSettings.ItemColumns.ISNEW, info.isnew);
         values.put(ClientSettings.ItemColumns.INDEX, info.appindex);
-        contentResolver.insert(ClientSettings.ItemColumns.CONTENT_URI, values);
+        contentResolver.insert(ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION, values);
     }
 
     public static void updatetDB(ContentResolver contentResolver, ItemInfo info) {
@@ -283,14 +283,12 @@ public class ProcessModel extends BroadcastReceiver {
                 where, null);
         return result;
     }
-
-    public static int deleteDB(Context context, String packageName) {
-        ContentResolver resolver = context.getContentResolver();
-        String where = ClientSettings.ItemColumns.PACKAGENAME + "='"
-                + packageName + "'";
-        int result = resolver.delete(ClientSettings.ItemColumns.CONTENT_URI,
-                where, null);
-        return result;
+    
+    public static void updateContentDB(Context context, String packageName, Element.State state) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
+                state.ordinal());
+        updateDB(context, packageName, contentValues);
     }
 
     private boolean noRecyleCallback() {

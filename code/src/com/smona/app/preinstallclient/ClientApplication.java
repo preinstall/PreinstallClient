@@ -2,6 +2,7 @@ package com.smona.app.preinstallclient;
 
 import com.smona.app.preinstallclient.control.ImageLoaderManager;
 import com.smona.app.preinstallclient.download.DownloadProxy;
+import com.smona.app.preinstallclient.download_ex.PreInstallAppManager;
 import com.smona.app.preinstallclient.util.LogUtil;
 
 import android.app.Application;
@@ -24,6 +25,7 @@ public class ClientApplication extends Application {
         DownloadProxy.setAppContext(this);
         mModel = new ProcessModel(this);
         reigster();
+        PreInstallAppManager.getPreInstallAppManager(this).init(this);
     }
 
     private void reigster() {

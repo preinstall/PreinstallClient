@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 
 import com.smona.app.preinstallclient.data.ItemInfo;
+import com.smona.app.preinstallclient.view.Element;
 
 @SuppressLint("NewApi")
 public class ParseJsonString {
@@ -57,7 +58,7 @@ public class ParseJsonString {
                 info.appIconUrl = js.getString(APPICON_URL);
                 info.className = js.getString(APP_CLASS);
                 info.sdkVersion = js.getString(SDK_VERDION);
-                info.downloadStatus = ItemInfo.STATUS_INIT;
+                info.downloadStatus = Element.State.NONE;
                 values.add(info);
             }
         } catch (Exception e) {

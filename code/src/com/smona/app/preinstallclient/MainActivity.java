@@ -65,11 +65,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        PreInstallAppManager.getPreInstallAppManager(getApplicationContext())
-                .init(getApplicationContext());
         initView();
         registerNetwork();
-        initData();
+        
         initDownload();
 
         startupService();
@@ -105,6 +103,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     }
 
     private void initData() {
+        LogUtil.d(TAG, "motianhu  initData ");
         ClientApplication app = (ClientApplication) getApplication();
         ProcessModel model = app.getProcessModel();
         model.initialize(this);
@@ -164,7 +163,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         LogUtil.d(TAG, "view: " + view + ", obj: " + obj);
         if (obj instanceof ItemInfo) {
             mItemIfo = (ItemInfo) obj;
-            if (mItemIfo.downloadStatus == ItemInfo.STATUS_RUNNING) {
+            if (mItemIfo.downloadStatus == Element.State.DOWNLOADING) {
                 return false;
             }
         }
@@ -194,17 +193,11 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
             int size = dataSource.getCount(true);
             for (int i = 0; i < size; i++) {
                 ItemInfo info = (ItemInfo) dataSource.getInfo(i);
-                if (info.downloadStatus == ItemInfo.STATUS_PAUSED) {
+                if (info.downloadStatus == Element.State.DOWNLOADING) {
                     DownloadProxy.getInstance().equeue(info);
                 }
             }
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        actionNetwork();
     }
 
     private void actionNetwork() {
@@ -228,8 +221,6 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     protected void onDestroy() {
         super.onDestroy();
         unRegisterNetwork();
-        PreInstallAppManager.getPreInstallAppManager(
-                this.getApplicationContext()).destroyGnPreinstallation();
     }
 
     @Override

@@ -1,15 +1,16 @@
 package com.smona.app.preinstallclient.data;
 
-import com.smona.app.preinstallclient.download.DownloadProxy;
+import com.smona.app.preinstallclient.view.Element;
 
 public class ItemInfo {
     public static final int NEW_FLAG = 1;
     public static final int UNNEW_FLAG = 0;
-    public static int STATUS_INIT = DownloadProxy.STATUS_PENDING;
-    public static int STATUS_RUNNING = DownloadProxy.STATUS_RUNNING;
-    public static int STATUS_PAUSED = DownloadProxy.STATUS_PAUSED;
-    public static int STATUS_FAILED = DownloadProxy.STATUS_FAILED;
-    public static int STATUS_SUCCESSFUL = DownloadProxy.STATUS_SUCCESSFUL;
+    
+    public static int STATUS_INIT = Element.State.NONE.ordinal();
+    public static int STATUS_RUNNING = Element.State.DOWNLOADING.ordinal();
+    public static int STATUS_PAUSED = Element.State.DOWNLOADING.ordinal();
+    public static int STATUS_FAILED = Element.State.NONE.ordinal();
+    public static int STATUS_SUCCESSFUL = Element.State.DOWNLOADED.ordinal();
 
     public String appid;
     public String appName;
@@ -19,7 +20,7 @@ public class ItemInfo {
     public String sdkVersion;
     public String packageName;
     public String className;
-    public int downloadStatus;
+    public Element.State downloadStatus;
     public float downloadPercent;
     public int isnew = NEW_FLAG;
     public int appindex = 0;

@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 public class MainDataAdatper extends AbstractDataAdapter {
 
     private ArrayList<View> mVisibleViews = new ArrayList<View>();
-    private Context mContext;
 
     public MainDataAdatper(Context context, IDataSource datasource) {
         super(context, datasource);
@@ -44,12 +43,8 @@ public class MainDataAdatper extends AbstractDataAdapter {
     private void setConvertView(View convertView, ItemInfo info) {
         Element element = (Element) convertView;
         element.initUI(info);
-        PreInstallAppManager.getPreInstallAppManager(
-                mContext.getApplicationContext()).setInfoDownloadListener(
-                info.packageName, info);
-        PreInstallAppManager.getPreInstallAppManager(
-                mContext.getApplicationContext()).setListener(info.packageName,
-                element);
+        PreInstallAppManager.getPreInstallAppManager(mContext).setListener(info.packageName, element);
+        PreInstallAppManager.getPreInstallAppManager(mContext).setInfoDownloadListener(info.packageName, info);
     }
 
     public int getNeedCount() {

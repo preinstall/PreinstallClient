@@ -11,6 +11,7 @@ import android.database.Cursor;
 import com.smona.app.preinstallclient.data.AbstractDataSource;
 import com.smona.app.preinstallclient.data.ItemInfo;
 import com.smona.app.preinstallclient.util.LogUtil;
+import com.smona.app.preinstallclient.view.Element;
 
 public class MainDataSource extends AbstractDataSource {
 
@@ -34,13 +35,13 @@ public class MainDataSource extends AbstractDataSource {
         return queryDBDatas(context, null, null);
     }
 
-    private static List<ItemInfo> queryDBDatas(Context context,
+    public static List<ItemInfo> queryDBDatas(Context context,
             String conditions, String[] selectArgs) {
         List<ItemInfo> values = new ArrayList<ItemInfo>();
         ContentResolver resolver = context.getContentResolver();
         Cursor c = null;
         try {
-            c = resolver.query(ClientSettings.ItemColumns.CONTENT_URI, null,
+            c = resolver.query(ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION, null,
                     conditions, selectArgs, ClientSettings.ItemColumns.INDEX
                             + " ASC ");
             boolean canRead = c != null;
@@ -79,7 +80,8 @@ public class MainDataSource extends AbstractDataSource {
                     info.appUrl = c.getString(appUrlIndex);
                     info.packageName = c.getString(appPackageIndex);
                     info.sdkVersion = c.getString(appSdkVersionIndex);
-                    info.downloadStatus = c.getInt(downloadStatusIndex);
+                    info.downloadStatus = Element.State.values()[c
+                            .getInt(downloadStatusIndex)];
                     info.appindex = c.getInt(indexIndex);
                     info.downloadFilePath = c.getString(downloadPathPathsIndex);
                     info.isnew = c.getInt(isNewIndex);
@@ -107,7 +109,7 @@ public class MainDataSource extends AbstractDataSource {
         try {
             ContentValues values = new ContentValues();
             values.put(ClientSettings.ItemColumns.ISDELETE, "1");
-            int count = resolver.update(ClientSettings.ItemColumns.CONTENT_URI,
+            int count = resolver.update(ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION,
                     values, ClientSettings.ItemColumns.PACKAGENAME + "=?",
                     new String[] { info.packageName });
             return count > 0;

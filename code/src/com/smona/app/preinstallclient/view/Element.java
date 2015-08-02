@@ -2,16 +2,13 @@ package com.smona.app.preinstallclient.view;
 
 import java.util.HashMap;
 
-import com.smona.app.preinstallclient.ProcessModel;
 import com.smona.app.preinstallclient.R;
 import com.smona.app.preinstallclient.control.ImageLoaderManager;
 import com.smona.app.preinstallclient.data.ItemInfo;
-import com.smona.app.preinstallclient.data.db.ClientSettings;
 import com.smona.app.preinstallclient.download_ex.PreInstallAppManager.DownloadListener;
 import com.smona.app.preinstallclient.util.LogUtil;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -24,7 +21,7 @@ public class Element extends LinearLayout implements DownloadListener {
     private static final String TAG = "Element";
 
     public enum State {
-        NONE, ON_DWONLOAD, DOWNLOAD_FINISH, DWONLOADED_NOT_INSTALL, ON_INSTALL, INSTALLED
+        NONE, DOWNLOADING, DOWNLOADED, DWONLOADED_NOT_INSTALL, INSTALLING, INSTALLED
     }
 
     protected State mState = State.NONE;
@@ -57,28 +54,11 @@ public class Element extends LinearLayout implements DownloadListener {
 
     private void initDatas() {
         STATUS_MAPS.put(State.NONE, -1);
-        STATUS_MAPS.put(State.ON_DWONLOAD, R.string.download_downloading);
-        STATUS_MAPS.put(State.DOWNLOAD_FINISH, R.string.download_pause);
-        STATUS_MAPS.put(State.DWONLOADED_NOT_INSTALL, R.string.download_failed);
-        STATUS_MAPS.put(State.ON_INSTALL, R.string.download_install);
+        STATUS_MAPS.put(State.DOWNLOADING, R.string.download_downloading);
+        STATUS_MAPS.put(State.DOWNLOADED, R.string.download_finish);
+        STATUS_MAPS.put(State.DWONLOADED_NOT_INSTALL, R.string.download_finish);
+        STATUS_MAPS.put(State.INSTALLING, R.string.download_install);
         STATUS_MAPS.put(State.INSTALLED, R.string.download_installed);
-    }
-
-    private void onStatusChange(int status) {
-        Integer resid = STATUS_MAPS.get(status);
-        if (resid != null && resid > 0) {
-            mStatus.setBackgroundDrawable(null);
-            mStatus.setText(resid);
-        }
-        if (status != ItemInfo.STATUS_INIT) {
-            relayoutDownstatue.setVisibility(View.GONE);
-        } else {
-            relayoutDownstatue.setVisibility(View.VISIBLE);
-        }
-        if (status == ItemInfo.STATUS_SUCCESSFUL) {
-            mProgress.setProgressTotal(1);
-            mProgress.updateProgress(1);
-        }
     }
 
     public void initUI(ItemInfo info) {
@@ -89,7 +69,8 @@ public class Element extends LinearLayout implements DownloadListener {
         } else {
             new_flag.setVisibility(View.GONE);
         }
-        onStatusChange(info.downloadStatus);
+        LogUtil.d(TAG, "motinahu initUI info: " + info);
+        setViewStatus(info.downloadStatus);
         setTag(info);
     }
 
@@ -99,17 +80,20 @@ public class Element extends LinearLayout implements DownloadListener {
                 + total + "]");
         mProgress.setProgressTotal(total);
         mProgress.updateProgress(progress);
-        if (progress == 0) {
-            relayoutDownstatue.setVisibility(View.VISIBLE);
-        } else {
+        if (mState != State.NONE) {
             relayoutDownstatue.setVisibility(View.GONE);
+        } else {
+            relayoutDownstatue.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onDownloadstateChanged(String appPkg, State state) {
         LogUtil.d(TAG, "onProgress onDownloadstateChanged [" + state + "]");
-        mState = state;
+        setViewStatus(state);
+    }
+
+    private void setViewStatus(State state) {
         Integer resid = STATUS_MAPS.get(state);
         if (resid != null && resid > 0) {
             mStatus.setBackgroundDrawable(null);
@@ -120,29 +104,26 @@ public class Element extends LinearLayout implements DownloadListener {
         } else {
             relayoutDownstatue.setVisibility(View.VISIBLE);
         }
-        if (state == State.DOWNLOAD_FINISH) {
+        if (state == State.DOWNLOADED || state == State.DWONLOADED_NOT_INSTALL
+                || state == State.INSTALLED || state == State.INSTALLING) {
             mProgress.setProgressTotal(1);
             mProgress.updateProgress(1);
         }
-        
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
-                state.ordinal());
-        ProcessModel.updateDB(getContext(), appPkg, contentValues);
+        changeTagStatus(state);
     }
 
     @Override
     public void onInstallStateChanged(String appPkg, State state) {
         LogUtil.d(TAG, "onProgress onInstallStateChanged [" + state + "], is: "
                 + state.ordinal());
-        mState = state;
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ClientSettings.ItemColumns.DOWNLOADSTATUS,
-                state.ordinal());
-        ProcessModel.updateDB(getContext(), appPkg, contentValues);
+        changeTagStatus(state);
     }
 
-    public State getPreAppState() {
-        return mState;
+    private void changeTagStatus(State state) {
+        Object obj =  (ItemInfo) getTag();
+        mState = state;
+        if(obj instanceof ItemInfo) {
+            ((ItemInfo)obj).downloadStatus = state;
+        }
     }
 }
