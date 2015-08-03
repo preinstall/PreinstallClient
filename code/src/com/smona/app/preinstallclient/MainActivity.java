@@ -67,6 +67,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         setContentView(R.layout.main);
         initView();
         registerNetwork();
+        initData();
         
         initDownload();
 

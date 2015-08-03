@@ -89,11 +89,9 @@ public class ContainerSpace extends FrameLayout implements DragSource,
     }
 
     private void initData() {
-
         mDataSource = ProcessModel.createDataSource(getContext()
                 .getApplicationContext());
         initScrollGridView();
-
     }
 
     private void initScrollGridView() {
@@ -101,15 +99,17 @@ public class ContainerSpace extends FrameLayout implements DragSource,
         mDataAdapterList.clear();
         int pageNo = (int) Math
                 .ceil(mDataSource.getCount(true) / APP_PAGE_SIZE);
+        Context context = getContext();
         for (int i = 0; i < pageNo; i++) {
             GridView appPage = new GridView(mMain);
             appPage.setOnItemClickListener(mMain);
             appPage.setOnItemLongClickListener(mMain);
-            appPage.setVerticalSpacing(30);
+            appPage.setVerticalSpacing(context.getResources()
+                    .getDimensionPixelSize(R.dimen.icon_gap_to_icon));
             // get the "i" page data
             int start = (int) (i * ContainerSpace.APP_PAGE_SIZE);
             int end = (int) (start + ContainerSpace.APP_PAGE_SIZE);
-            IDataSource loaclDatasource = new MainDataSource(getContext());
+            IDataSource loaclDatasource = new MainDataSource(context);
             loaclDatasource.copy(mDataSource, start, end);
             MainDataAdatper mDataAdapter = new MainDataAdatper(mMain,
                     loaclDatasource);

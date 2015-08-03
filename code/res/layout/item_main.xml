@@ -29,7 +29,7 @@
             android:layout_height="@dimen/download_status_height"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/download_status_pedding" >
+            android:background="@drawable/download_progress_mengban" >
         </RelativeLayout>
 
         <TextView

@@ -2,7 +2,7 @@
 
     <dimen name="source_bitmap_size">48dp</dimen>
     <dimen name="content_width">250dp</dimen>
-    <dimen name="content_height">360dp</dimen>
+    <dimen name="content_height">400dp</dimen>
     <dimen name="space_padding_left">14dp</dimen>
     <dimen name="space_padding_right">14dp</dimen>
 
@@ -20,7 +20,7 @@
     <dimen name="grid_h">10dp</dimen>
     <dimen name="grid_margin_left">15dp</dimen>
     <dimen name="grid_margin_right">15dp</dimen>
-    <dimen name="grid_margin_top">160dp</dimen>
+    <dimen name="grid_margin_top">100dp</dimen>
     <dimen name="droptarget_marginTop">0dp</dimen>
     <dimen name="download_status_height">20dp</dimen>
     <dimen name="download_status_width">30dp</dimen>
@@ -55,5 +55,7 @@
     <dimen name="download_manager_item_marginBottom">10dp</dimen>
     <dimen name="download_manager_desc_margin_right">10dp</dimen>
     <dimen name="download_progress_margin">3dp</dimen>
+    
+    <dimen name="icon_gap_to_icon">37dp</dimen>
 
 </resources>

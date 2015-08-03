@@ -10,6 +10,7 @@ import com.smona.app.preinstallclient.util.LogUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -108,6 +109,7 @@ public class Element extends LinearLayout implements DownloadListener {
                 || state == State.INSTALLED || state == State.INSTALLING) {
             mProgress.setProgressTotal(1);
             mProgress.updateProgress(1);
+            mStatus.setTextColor(Color.WHITE);
         }
         changeTagStatus(state);
     }
