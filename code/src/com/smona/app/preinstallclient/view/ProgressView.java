@@ -49,7 +49,8 @@ public class ProgressView extends View {
         super.onDraw(canvas);
         if (mProgressWidth != 0) {
             if (mProgressCompleted == mProgressTotal && mProgressTotal > 0) {
-                setBackgroundColor(Color.rgb(0xff, 0x67, 0x02));
+                setBackgroundResource(R.drawable.install_mast);
+                //setBackgroundColor(Color.rgb(0xff, 0x67, 0x02));
             } else if (mProgressCompleted != 0 && mProgressTotal != 0) {
                 int width = (int) (mProgressCompleted * mProgressWidth / mProgressTotal);
                 mDownloadedDrawable.setBounds(0, 0, width,
