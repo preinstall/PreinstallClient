@@ -24,7 +24,7 @@ public class AutoDownloadInWifiService extends Service {
 
     private static final String TAG = "AutoDownloadInWifiService";
 
-    private static final int DOWNLOAD_FETCH_COUNT = 2;
+    private static final int DOWNLOAD_FETCH_COUNT = 9;
 
     private static final String LAST_SECOND = " 23:59:59";
 

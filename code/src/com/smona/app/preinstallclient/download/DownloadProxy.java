@@ -42,9 +42,6 @@ public class DownloadProxy {
                 | DownloadManager.Request.NETWORK_WIFI);
         request.setDestinationInExternalPublicDir(StorageUtils.getHomeDir(),
                 info.packageName + Constant.APK);
-        request.setNotificationVisibility(View.VISIBLE);
-        request.setDescription(info.appName);
-        request.setTitle(info.appName);
         request.setMimeType("application/vnd.android.package-archive");
         
         long downloadid = mDownloadMgr.enqueue(request);
