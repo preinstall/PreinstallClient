@@ -9,7 +9,6 @@ import android.app.DownloadManager;
 import android.app.DownloadManager.Request;
 import android.content.Context;
 import android.net.Uri;
-import android.view.View;
 
 public class DownloadProxy {
     private DownloadManager mDownloadMgr;

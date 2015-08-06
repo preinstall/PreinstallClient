@@ -1,7 +1,7 @@
 package com.smona.app.preinstallclient.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -11,10 +11,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Scroller;
 
-/**
- * ��Launcher�е�WorkSapce���������һ����л���Ļ����
- * 
- */
 public class ScrollLayout extends ViewGroup {
 
     private static final String TAG = "ScrollLayout";
@@ -31,17 +27,14 @@ public class ScrollLayout extends ViewGroup {
 
     private int mTouchState = TOUCH_STATE_REST;
     private int mTouchSlop;
-    private float mLastMotionX;
     private float mLastMotionY;
 
     public ScrollLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        // TODO Auto-generated constructor stub
     }
 
     public ScrollLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        // TODO Auto-generated constructor stub
         mScroller = new Scroller(context);
 
         mCurScreen = mDefaultScreen;
@@ -50,10 +43,8 @@ public class ScrollLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        // TODO Auto-generated method stub
         int childTop = 0;
         final int childCount = getChildCount();
-        System.out.println("childCount=" + childCount);
         for (int i = 0; i < childCount; i++) {
             final View childView = getChildAt(i);
             if (childView.getVisibility() != View.GONE) {
@@ -127,24 +118,21 @@ public class ScrollLayout extends ViewGroup {
 
     @Override
     public void computeScroll() {
-        // TODO Auto-generated method stub
         if (mScroller.computeScrollOffset()) {
             scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             postInvalidate();
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // TODO Auto-generated method stub
-
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
         mVelocityTracker.addMovement(event);
 
         final int action = event.getAction();
-        final float x = event.getX();
         final float y = event.getY();
 
         switch (action) {
@@ -177,7 +165,6 @@ public class ScrollLayout extends ViewGroup {
                 // Fling enough to move left
                 Log.e(TAG, "snap left");
                 onScreenChangeListener.onScreenChange(mCurScreen - 1);
-                System.out.println("mCurScreen=" + (mCurScreen - 1));
                 snapToScreen(mCurScreen - 1);
             } else if (velocityY < -SNAP_VELOCITY
                     && mCurScreen < getChildCount() - 1) {
@@ -206,7 +193,6 @@ public class ScrollLayout extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        // TODO Auto-generated method stub
         Log.e(TAG, "onInterceptTouchEvent-slop:" + mTouchSlop);
 
         final int action = ev.getAction();
@@ -215,7 +201,6 @@ public class ScrollLayout extends ViewGroup {
             return true;
         }
 
-        final float x = ev.getX();
         final float y = ev.getY();
 
         switch (action) {
@@ -228,7 +213,6 @@ public class ScrollLayout extends ViewGroup {
             break;
 
         case MotionEvent.ACTION_DOWN:
-            mLastMotionX = x;
             mLastMotionY = y;
             mTouchState = mScroller.isFinished() ? TOUCH_STATE_REST
                     : TOUCH_STATE_SCROLLING;
@@ -243,7 +227,6 @@ public class ScrollLayout extends ViewGroup {
         return mTouchState != TOUCH_STATE_REST;
     }
 
-    // ��ҳ����
     public interface OnScreenChangeListener {
         void onScreenChange(int currentIndex);
     }
@@ -255,7 +238,6 @@ public class ScrollLayout extends ViewGroup {
         this.onScreenChangeListener = onScreenChangeListener;
     }
 
-    // ��̬��ݼ���
     public interface OnScreenChangeListenerDataLoad {
         void onScreenChange(int currentIndex);
     }
