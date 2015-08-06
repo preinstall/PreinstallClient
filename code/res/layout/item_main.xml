@@ -15,19 +15,19 @@
             android:layout_height="@dimen/item_icon_size"
             android:scaleType="fitXY"/>
         
-        <ImageView
+        <com.smona.app.preinstallclient.view.ProgressView
+            android:id="@+id/download_progress"
+            android:layout_width="64dp"
+            android:layout_height="@dimen/download_status_height"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/download_normal" />
+        
+         <ImageView
             android:layout_width="@dimen/item_icon_size"
             android:layout_height="@dimen/item_icon_size"
             android:src="@drawable/mask"
             android:scaleType="fitXY"/>
-
-        <com.smona.app.preinstallclient.view.ProgressView
-            android:id="@+id/download_progress"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/download_status_height"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="center_horizontal|bottom"
-            android:background="@drawable/download_normal" />
 
         <RelativeLayout
             android:id="@+id/relayoutDownstatue"
