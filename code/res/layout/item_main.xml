@@ -14,6 +14,12 @@
             android:layout_width="@dimen/item_icon_size"
             android:layout_height="@dimen/item_icon_size"
             android:scaleType="fitXY"/>
+        
+        <ImageView
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:src="@drawable/mask"
+            android:scaleType="fitXY"/>
 
         <com.smona.app.preinstallclient.view.ProgressView
             android:id="@+id/download_progress"
@@ -43,15 +49,8 @@
             android:text="@string/download_idle"
             android:textColor="#000000"
             android:textSize="@dimen/download_status_text_size" />
-
-        <ImageView
-            android:id="@+id/new_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center"
-            android:background="@drawable/new_app" />
+        
+        
     </RelativeLayout>
 
     <TextView

@@ -32,7 +32,6 @@ public class Element extends LinearLayout implements DownloadListener {
     private TextView mStatus;
     private ImageView mImage;
     private RelativeLayout relayoutDownstatue;
-    private ImageView new_flag;
 
     @SuppressLint("UseSparseArrays")
     private static final HashMap<State, Integer> STATUS_MAPS = new HashMap<State, Integer>();
@@ -49,7 +48,6 @@ public class Element extends LinearLayout implements DownloadListener {
         mStatus = (TextView) findViewById(R.id.download_status);
         mTitle = (TextView) findViewById(R.id.title);
         mImage = (ImageView) findViewById(R.id.image);
-        new_flag = (ImageView) findViewById(R.id.new_flag);
         relayoutDownstatue = (RelativeLayout) findViewById(R.id.relayoutDownstatue);
     }
 
@@ -65,11 +63,6 @@ public class Element extends LinearLayout implements DownloadListener {
     public void initUI(ItemInfo info) {
         ImageLoaderManager.getInstance().loadImage(info.appIconUrl, mImage);
         mTitle.setText(info.appName);
-        if (ItemInfo.NEW_FLAG == info.isnew) {
-            new_flag.setVisibility(View.VISIBLE);
-        } else {
-            new_flag.setVisibility(View.GONE);
-        }
         LogUtil.d(TAG, "motinahu initUI info: " + info);
         setViewStatus(info.downloadStatus);
         setTag(info);

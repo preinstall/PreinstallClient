@@ -141,20 +141,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
         if (obj instanceof ItemInfo) {
             mItemIfo = (ItemInfo) obj;
         }
-        if (mItemIfo.isnew == ItemInfo.NEW_FLAG) {
-            mItemIfo.isnew = ItemInfo.UNNEW_FLAG;
-            view.findViewById(R.id.new_flag).setVisibility(View.GONE);
-            updateNewNewFalg(mItemIfo);
-        }
         PreInstallAppManager.getPreInstallAppManager(this).execute(
                 (Element) view, this);
 
-    }
-
-    private void updateNewNewFalg(ItemInfo itemInfo) {
-        ContentValues values = new ContentValues();
-        values.put(ClientSettings.ItemColumns.ISNEW, ItemInfo.UNNEW_FLAG);
-        ProcessModel.updateDB(this, itemInfo.packageName, values);
     }
 
     @Override

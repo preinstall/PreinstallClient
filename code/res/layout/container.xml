@@ -5,6 +5,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
         android:layout_height="@dimen/content_height"
         android:layout_gravity="center"
         android:background="@drawable/show_bg"
@@ -28,7 +30,7 @@
             android:id="@+id/gridView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_marginTop="10dip" >
+            android:layout_marginTop="14dp" >
 
             <com.smona.app.preinstallclient.view.ScrollLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
