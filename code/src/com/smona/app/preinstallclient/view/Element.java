@@ -15,7 +15,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class Element extends LinearLayout implements DownloadListener {
@@ -31,7 +30,7 @@ public class Element extends LinearLayout implements DownloadListener {
     private TextView mTitle;
     private TextView mStatus;
     private ImageView mImage;
-    private RelativeLayout relayoutDownstatue;
+    private View relayoutDownstatue;
 
     @SuppressLint("UseSparseArrays")
     private static final HashMap<State, Integer> STATUS_MAPS = new HashMap<State, Integer>();
@@ -48,7 +47,7 @@ public class Element extends LinearLayout implements DownloadListener {
         mStatus = (TextView) findViewById(R.id.download_status);
         mTitle = (TextView) findViewById(R.id.title);
         mImage = (ImageView) findViewById(R.id.image);
-        relayoutDownstatue = (RelativeLayout) findViewById(R.id.relayoutDownstatue);
+        relayoutDownstatue = findViewById(R.id.relayoutDownstatue);
     }
 
     private void initDatas() {

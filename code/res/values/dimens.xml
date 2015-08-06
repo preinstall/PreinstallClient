@@ -56,6 +56,6 @@
     <dimen name="download_manager_desc_margin_right">10dp</dimen>
     <dimen name="download_progress_margin">3dp</dimen>
     
-    <dimen name="icon_gap_to_icon">37dp</dimen>
+    <dimen name="icon_gap_to_icon">36dp</dimen>
 
 </resources>

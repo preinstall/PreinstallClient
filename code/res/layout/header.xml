@@ -4,28 +4,21 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/header_title"
+    <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/header_margin_title_left"
-        android:layout_marginTop="14dp" >
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/hot_title"
-            android:textColor="#FF5400"
-            android:textSize="20sp" />
-    </RelativeLayout>
+        android:layout_marginTop="16dp"
+        android:text="@string/hot_title"
+        android:textColor="#FF5400"
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/header_margin_underline_left"
+        android:layout_marginRight="@dimen/header_margin_underline_left"
         android:layout_marginTop="14dp"
         android:orientation="vertical" >
 
