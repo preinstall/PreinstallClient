@@ -1,20 +1,21 @@
 <com.smona.app.preinstallclient.view.Element xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/element"
-    android:layout_width="@dimen/item_icon_size"
-    android:layout_height="@dimen/item_icon_size"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:layout_width="@dimen/item_icon_size"
-        android:layout_height="@dimen/item_icon_size" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp" >
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="@dimen/item_icon_size"
             android:layout_height="@dimen/item_icon_size"
-            android:scaleType="fitXY"/>
-        
+            android:scaleType="fitXY" />
+
         <com.smona.app.preinstallclient.view.ProgressView
             android:id="@+id/download_progress"
             android:layout_width="64dp"
@@ -22,12 +23,12 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/download_normal" />
-        
-         <ImageView
+
+        <ImageView
             android:layout_width="@dimen/item_icon_size"
             android:layout_height="@dimen/item_icon_size"
-            android:src="@drawable/mask"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/mask" />
 
         <ImageView
             android:id="@+id/relayoutDownstatue"
@@ -35,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="2dp"
+            android:paddingBottom="2dp"
             android:src="@drawable/download_progress_mengban" />
 
         <TextView
@@ -45,12 +46,10 @@
             android:layout_height="@dimen/download_status_height"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
+            android:paddingBottom="2dp"
             android:text="@string/download_idle"
             android:textColor="#000000"
             android:textSize="@dimen/download_status_text_size" />
-        
-        
     </RelativeLayout>
 
     <TextView

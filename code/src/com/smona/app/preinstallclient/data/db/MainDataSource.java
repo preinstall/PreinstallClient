@@ -23,9 +23,16 @@ public class MainDataSource extends AbstractDataSource {
 
     @Override
     protected void initDatas() {
-        List<ItemInfo> datas = queryDBDatas(mContext,
-                ClientSettings.ItemColumns.ISDELETE + "=?",
-                new String[] { ClientSettings.ItemColumns.DELETE_NO + "" });
+        String conditions = ClientSettings.ItemColumns.ISDELETE + "=? and "
+                + ClientSettings.ItemColumns.DOWNLOADSTATUS + " in (?,?)";
+        String[] selectArgs = new String[] {
+                ClientSettings.ItemColumns.DELETE_NO + "",
+                Element.State.NONE.ordinal() + "",
+                Element.State.DOWNLOADING.ordinal() + "",
+                Element.State.DWONLOADED_NOT_INSTALL.ordinal() + "",
+                Element.State.INSTALLING.ordinal() + "", };
+
+        List<ItemInfo> datas = queryDBDatas(mContext, conditions, selectArgs);
         if (datas.size() > 0) {
             mDatas.addAll(datas);
         }
@@ -41,9 +48,10 @@ public class MainDataSource extends AbstractDataSource {
         ContentResolver resolver = context.getContentResolver();
         Cursor c = null;
         try {
-            c = resolver.query(ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION, null,
-                    conditions, selectArgs, ClientSettings.ItemColumns.INDEX
-                            + " ASC ");
+            c = resolver.query(
+                    ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION,
+                    null, conditions, selectArgs,
+                    ClientSettings.ItemColumns.INDEX + " ASC ");
             boolean canRead = c != null;
             if (canRead) {
                 int appidIndex = c
@@ -109,7 +117,8 @@ public class MainDataSource extends AbstractDataSource {
         try {
             ContentValues values = new ContentValues();
             values.put(ClientSettings.ItemColumns.ISDELETE, "1");
-            int count = resolver.update(ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION,
+            int count = resolver.update(
+                    ClientSettings.ItemColumns.CONTENT_URI_NO_NOTIFICATION,
                     values, ClientSettings.ItemColumns.PACKAGENAME + "=?",
                     new String[] { info.packageName });
             return count > 0;
