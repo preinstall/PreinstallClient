@@ -333,7 +333,7 @@ public class PreInstallAppManager {
                 || itemInfo.downloadStatus == Element.State.INSTALLING) {
             String packageName = itemInfo.packageName;
             setListener(packageName, shortcut);
-
+            shortcut.onDownloadstateChanged(packageName, itemInfo.downloadStatus);
             mGnPreinstallation.sysInstall(getPreinstallationArgs(itemInfo));
         } else if (itemInfo.downloadStatus == Element.State.NONE) {
             clickPreInstallShortcut(itemInfo, shortcut, context, true);
