@@ -24,7 +24,7 @@ public class MainDataSource extends AbstractDataSource {
     @Override
     protected void initDatas() {
         String conditions = ClientSettings.ItemColumns.ISDELETE + "=? and "
-                + ClientSettings.ItemColumns.DOWNLOADSTATUS + " in (?,?)";
+                + ClientSettings.ItemColumns.DOWNLOADSTATUS + " in (?,?,?,?)";
         String[] selectArgs = new String[] {
                 ClientSettings.ItemColumns.DELETE_NO + "",
                 Element.State.NONE.ordinal() + "",

@@ -34,7 +34,7 @@
     <dimen name="dialog_action_padding">10dp</dimen>
     <dimen name="dialog_no_marginLeft">50dp</dimen>
     <dimen name="dialog_vivision_height">2dp</dimen>
-    <dimen name="no_network_marginTop">30dp</dimen>
+    <dimen name="no_network_marginTop">39dp</dimen>
     <dimen name="header_margin_underline_left">18dp</dimen>
     <dimen name="header_margin_title_left">27dp</dimen>
     <dimen name="head_title_height">35dp</dimen>

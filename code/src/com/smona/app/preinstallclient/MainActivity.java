@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener,
     private CommonConfirmDialog mConfirmDialog;
     private ItemInfo mItemIfo;
     private DownloadObsever mDataChangeObserver;
-    private boolean mIsFirstIn = true;
+    private boolean mIsFirstIn = false;
 
     @SuppressLint("HandlerLeak")
     private Handler mDataChangedHandler = new Handler() {
